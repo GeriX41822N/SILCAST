@@ -16,24 +16,7 @@ use Illuminate\Support\Carbon; // Importa Carbon para manejar fechas
 
 class EntradaSalidaGruaController extends Controller
 {
-    // Constructor para aplicar middleware de permisos (opcional pero organizado)
-    // public function __construct()
-    // {
-    //     // Requiere permiso para ver lista y detalles de movimientos
-    //     $this->middleware('permission:view movements', ['only' => ['index', 'show', 'filterByDate', 'getMovimientosByGrua']]);
-    //     // Requiere permiso para crear movimientos
-    //     $this->middleware('permission:create movements', ['only' => ['store']]);
-    //     // Requiere permiso para actualizar movimientos
-    //     $this->middleware('permission:edit movements', ['only' => ['update']]);
-    //     // Requiere permiso para eliminar movimientos
-    //     $this->middleware('permission:delete movements', ['only' => ['destroy']]);
-    // }
 
-
-    /**
-     * Muestra una lista de registros de entrada/salida de grúas.
-     * Requiere permiso 'view movements'.
-     */
     public function index()
     {
         // Verificar permiso usando Spatie
@@ -43,9 +26,7 @@ class EntradaSalidaGruaController extends Controller
         }
 
         try {
-            // Obtener todos los movimientos.
-            // Es importante cargar las relaciones con Grua y Empleado (Operador)
-            // ¡CORREGIDO! Usamos 'operador' en lugar de 'empleado' para la relación con Empleado
+           
             $movimientos = EntradasSalidasGrua::with(['grua', 'operador'])
                                              ->orderBy('fecha_hora_entrada', 'desc') // Ordenar por fecha/hora de entrada
                                              ->get();
@@ -75,22 +56,6 @@ class EntradaSalidaGruaController extends Controller
             // Crear el registro de movimiento con los datos validados
             // El Form Request ya asegura que los datos son válidos y autorizados
             $movimiento = EntradasSalidasGrua::create($request->validated());
-
-            // Opcional: Actualizar el estado de la grúa si es necesario (ej. 'disponible', 'en servicio')
-            // Esto dependerá de la lógica de tu aplicación y si la tabla 'gruas' tiene un campo de estado
-            // if ($movimiento->tipo_movimiento === 'salida') {
-            //     // Asegúrate de cargar la relación grua si no la tienes precargada
-            //     // $movimiento->load('grua');
-            //     // if ($movimiento->grua) {
-            //     //     $movimiento->grua->update(['estado' => 'en servicio']);
-            //     // }
-            // } elseif ($movimiento->tipo_movimiento === 'entrada') {
-            //     // $movimiento->load('grua');
-            //     // if ($movimiento->grua) {
-            //     //     $movimiento->grua->update(['estado' => 'disponible']);
-            //     // }
-            // }
-
 
             DB::commit(); // Confirmar transacción
 
@@ -122,7 +87,6 @@ class EntradaSalidaGruaController extends Controller
 
         try {
             // Encontrar el movimiento por su ID y cargar relaciones
-            // ¡CORREGIDO! Usamos 'operador' en lugar de 'empleado'
             $movimiento = EntradasSalidasGrua::with(['grua', 'operador'])->findOrFail($id);
 
             Log::info('Registro de movimiento de grúa encontrado.', ['movimiento_id' => $movimiento->id, 'user_id' => Auth::id()]);
@@ -145,21 +109,13 @@ class EntradaSalidaGruaController extends Controller
      */
     public function update(EntradaSalidaGruaRequest $request, int $id)
     {
-        // La autorización ya se verifica en EntradaSalidaGruaRequest
-        // if (!Auth::user()->can('edit movements')) { ... }
 
         DB::beginTransaction(); // Iniciar transacción
 
         try {
             // Encontrar el registro de movimiento
             $movimiento = EntradasSalidasGrua::findOrFail($id);
-
-            // Opcional: Si cambias el tipo de movimiento o la grúa, podrías necesitar actualizar el estado de la grúa anterior/nueva.
-            // Esto se vuelve complejo y podría requerir lógica adicional.
-            // Considera si realmente necesitas actualizar registros de movimiento o si es mejor crear nuevos.
-
-
-            // Actualizar el registro de movimiento con los datos validados
+         // Actualizar el registro de movimiento con los datos validados
             $movimiento->update($request->validated());
 
             DB::commit(); // Confirmar transacción
@@ -197,11 +153,6 @@ class EntradaSalidaGruaController extends Controller
         try {
             // Encontrar el registro de movimiento
             $movimiento = EntradasSalidasGrua::findOrFail($id);
-
-            // Opcional: Si eliminas un movimiento, podrías necesitar revertir el estado de la grúa.
-            // Esto también puede ser complejo. Considera si la eliminación es la mejor opción
-            // o si un estado 'cancelado' es preferible.
-
 
             // Eliminar el registro de movimiento
             $movimiento->delete();

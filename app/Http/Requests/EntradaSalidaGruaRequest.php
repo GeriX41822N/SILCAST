@@ -3,22 +3,17 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth; // Importa Auth
-use Illuminate\Validation\Rule; // Importa Rule
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class EntradaSalidaGruaRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
-     * Determina si el usuario está autorizado para hacer esta petición.
-     *
-     * @return bool
      */
     public function authorize(): bool
     {
-        // Autorizar si el usuario tiene permiso para crear o editar movimientos
-        // Si es una petición POST (crear), requiere 'create movements'.
-        // Si es una petición PUT/PATCH (actualizar), requiere 'edit movements'.
+        // Autorizar según el método de la petición (POST para crear, PUT/PATCH para editar)
         if ($this->isMethod('POST')) {
             return Auth::check() && Auth::user()->can('create movements');
         }
@@ -27,74 +22,84 @@ class EntradaSalidaGruaRequest extends FormRequest
              return Auth::check() && Auth::user()->can('edit movements');
         }
 
-        // Para otros métodos (GET, DELETE), la autorización se maneja en el controlador
-        // Permitimos que la petición llegue al controlador para verificación más específica
+        // Permitir otras peticiones (GET, DELETE) pasar al controlador para verificación específica
         return Auth::check();
     }
 
     /**
      * Get the validation rules that apply to the request.
-     * Obtiene las reglas de validación que aplican a la petición.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
      */
     public function rules(): array
     {
-        // Determinar si estamos creando o actualizando para ajustar reglas si es necesario (menos común para movimientos)
-        // $isUpdating = $this->isMethod('PUT') || $this->isMethod('PATCH');
-        // $movimientoId = $this->route('movimientos_grua'); // Obtener el ID del movimiento si estamos actualizando
-
         return [
-            // Validaciones para los campos de la tabla 'entradas_salidas_grua'
             'grua_id' => [
                 'required',
                 'integer',
-                'exists:gruas,id', // Asegura que el ID de la grúa exista en la tabla 'gruas'
+                'exists:gruas,id', // Asegura que la grúa exista
             ],
             'empleado_id' => [
                 'required',
                 'integer',
-                'exists:empleados,id', // Asegura que el ID del empleado exista en la tabla 'empleados'
+                'exists:empleados,id', // Asegura que el empleado (operador) exista
             ],
-            // Eliminamos la validación para cliente_id
-            // 'cliente_id' => [
-            //     'nullable', // El cliente_id puede ser nulo (ej. si es una entrada)
-            //     'integer',
-            //     'exists:clientes,id', // Asegura que el ID del cliente exista si no es nulo
-            // ],
+            'cliente_id' => [
+                 'nullable', // Cliente puede ser nulo
+                 'integer',
+                 'exists:clientes,id', // Asegura que el cliente exista si no es nulo
+            ],
             'tipo_movimiento' => [
                 'required',
                 'string',
                 Rule::in(['entrada', 'salida']), // Asegura que sea 'entrada' o 'salida'
             ],
-            'fecha_hora' => 'required|date', // Asegura que sea una fecha y hora válida
-            'ubicacion_origen' => [
-                'required',
-                'string',
-                'max:255',
-                // Opcional: Si la ubicación de origen es requerida solo para entradas
-                // Rule::requiredIf($this->input('tipo_movimiento') === 'entrada'),
+
+            // *** Reglas de validación alineadas con los campos del formulario frontend ***
+            'fecha_hora_entrada' => [
+                 Rule::requiredIf($this->input('tipo_movimiento') === 'entrada'), // Requerido solo para entradas
+                 'nullable', // Permite que sea nulo si no es requerido
+                 'date', // Asegura que sea una fecha y hora válida
             ],
-            'ubicacion_destino' => [
-                'nullable', // La ubicación de destino puede ser nula (ej. si es una entrada)
-                'string',
-                'max:255',
-                // Si la salida es a un lugar genérico y no a un cliente, podrías hacer esto requerido para salidas:
-                 Rule::requiredIf($this->input('tipo_movimiento') === 'salida'),
+            'fecha_hora_salida' => [
+                 Rule::requiredIf($this->input('tipo_movimiento') === 'salida'), // Requerido solo para salidas
+                 'nullable', // Permite que sea nulo si no es requerido
+                 'date', // Asegura que sea una fecha y hora válida
             ],
-            'observaciones' => 'nullable|string', // Las observaciones son opcionales
-            // Agrega aquí otras reglas para campos adicionales en tu tabla si los tienes
-            'kilometraje' => 'nullable|numeric', // Mantener validación de kilometraje
-            'combustible_salida' => 'nullable|numeric', // Mantener validación de combustible_salida
-            'combustible_entrada' => 'nullable|numeric', // Mantener validación de combustible_entrada
+
+            // El campo 'ubicacion' del frontend (para 'Destino')
+             'ubicacion' => [
+                 Rule::requiredIf($this->input('tipo_movimiento') === 'salida'), // Requerido solo para salidas
+                 'nullable', // Permite que sea nulo si no es requerido
+                 'string',
+                 'max:255',
+             ],
+
+            // El campo 'descripcion' del frontend (para 'Observaciones')
+             'descripcion' => 'nullable|string',
+
+            // Campos de kilometraje (separados para entrada y salida)
+             'kilometraje_entrada' => [
+                 Rule::requiredIf($this->input('tipo_movimiento') === 'entrada'), // Requerido solo para entradas
+                 'nullable',
+                 'numeric', // Debe ser numérico
+             ],
+             'kilometraje_salida' => [
+                 Rule::requiredIf($this->input('tipo_movimiento') === 'salida'), // Requerido solo para salidas
+                 'nullable',
+                 'numeric', // Debe ser numérico
+             ],
+
+            // Campos de combustible (separados para entrada y salida)
+             'combustible_entrada' => 'nullable|numeric|between:0,100', // Opcional, numérico entre 0 y 100
+             'combustible_salida' => 'nullable|numeric|between:0,100', // Opcional, numérico entre 0 y 100
+
+            'estado' => 'nullable|string|max:255', // Asumimos que 'estado' existe y es opcional
+
+            // Si tienes otros campos que el formulario envíe, añadelos aquí
         ];
     }
 
     /**
      * Get the error messages for the defined validation rules.
-     * Obtiene los mensajes de error para las reglas de validación definidas.
-     *
-     * @return array<string, string>
      */
     public function messages(): array
     {
@@ -103,35 +108,40 @@ class EntradaSalidaGruaRequest extends FormRequest
             'grua_id.integer' => 'El campo Grúa debe ser un número entero.',
             'grua_id.exists' => 'La Grúa seleccionada no existe.',
 
-            'empleado_id.required' => 'El campo Empleado (Operador) es obligatorio.', // Ajustado mensaje
-            'empleado_id.integer' => 'El campo Empleado (Operador) debe ser un número entero.', // Ajustado mensaje
-            'empleado_id.exists' => 'El Empleado (Operador) seleccionado no existe.', // Ajustado mensaje
+            'empleado_id.required' => 'El campo Empleado (Operador) es obligatorio.',
+            'empleado_id.integer' => 'El campo Empleado (Operador) debe ser un número entero.',
+            'empleado_id.exists' => 'El Empleado (Operador) seleccionado no existe.',
 
-            // Eliminamos los mensajes de error para cliente_id
-            // 'cliente_id.integer' => 'El campo Cliente debe ser un número entero.',
-            // 'cliente_id.exists' => 'El Cliente seleccionado no existe.',
+            'cliente_id.integer' => 'El campo Cliente debe ser un número entero.',
+            'cliente_id.exists' => 'El Cliente seleccionado no existe.',
 
             'tipo_movimiento.required' => 'El campo Tipo de Movimiento es obligatorio.',
-            'tipo_movimiento.string' => 'El campo Tipo de Movimiento debe ser una cadena de texto.',
             'tipo_movimiento.in' => 'El Tipo de Movimiento debe ser "entrada" o "salida".',
 
-            'fecha_hora.required' => 'El campo Fecha y Hora es obligatorio.',
-            'fecha_hora.date' => 'El campo Fecha y Hora debe ser una fecha y hora válida.',
+            // *** Mensajes de error alineados con los campos del formulario frontend ***
+            'fecha_hora_entrada.required_if' => 'El campo Fecha y Hora de Entrada es obligatorio para movimientos de entrada.',
+            'fecha_hora_entrada.date' => 'El campo Fecha y Hora de Entrada debe ser una fecha y hora válida.',
 
-            'ubicacion_origen.required' => 'El campo Ubicación de Origen es obligatorio.',
-            'ubicacion_origen.string' => 'El campo Ubicación de Origen debe ser una cadena de texto.',
-            'ubicacion_origen.max' => 'El campo Ubicación de Origen no debe exceder los :max caracteres.',
+            'fecha_hora_salida.required_if' => 'El campo Fecha y Hora de Salida es obligatorio para movimientos de salida.',
+            'fecha_hora_salida.date' => 'El campo Fecha y Hora de Salida debe ser una fecha y hora válida.',
 
-            'ubicacion_destino.required_if' => 'El campo Ubicación de Destino es obligatorio para movimientos de salida.',
-            'ubicacion_destino.string' => 'El campo Ubicación de Destino debe ser una cadena de texto.',
-            'ubicacion_destino.max' => 'El campo Ubicación de Destino no debe exceder los :max caracteres.',
+            'ubicacion.required_if' => 'El campo Destino es obligatorio para movimientos de salida.',
+            'ubicacion.string' => 'El campo Destino debe ser una cadena de texto.',
+            'ubicacion.max' => 'El campo Destino no debe exceder los :max caracteres.',
 
-            'observaciones.string' => 'El campo Observaciones debe ser una cadena de texto.',
+            'descripcion.string' => 'El campo Observaciones debe ser una cadena de texto.',
 
-            // Mensajes para campos adicionales (mantener)
-            'kilometraje.numeric' => 'El kilometraje debe ser un valor numérico.',
-            'combustible_salida.numeric' => 'El combustible de salida debe ser un valor numérico.',
-            'combustible_entrada.numeric' => 'El combustible de entrada debe ser un valor numérico.',
+            // Mensajes para campos de kilometraje
+            'kilometraje_entrada.required_if' => 'El Kilometraje de Entrada es obligatorio para movimientos de entrada.',
+            'kilometraje_entrada.numeric' => 'El Kilometraje de Entrada debe ser un valor numérico.',
+            'kilometraje_salida.required_if' => 'El Kilometraje de Salida es obligatorio para movimientos de salida.',
+            'kilometraje_salida.numeric' => 'El Kilometraje de Salida debe ser un valor numérico.',
+
+            // Mensajes para campos de combustible
+            'combustible_entrada.numeric' => 'El Combustible de Entrada debe ser un valor numérico.',
+            'combustible_entrada.between' => 'El Combustible de Entrada debe estar entre :min y :max.',
+            'combustible_salida.numeric' => 'El Combustible de Salida debe ser un valor numérico.',
+            'combustible_salida.between' => 'El Combustible de Salida debe estar entre :min y :max.',
         ];
     }
 }
