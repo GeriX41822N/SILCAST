@@ -37,7 +37,7 @@ Route::group(['prefix' => 'auth'], function () {
 // --- Rutas Protegidas (Requieren autenticación con token Sanctum) ---
 // Todas las rutas dentro de este grupo requieren un token Sanctum válido
 // en la cabecera 'Authorization: Bearer <token>'.
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'cors'])->group(function () { // ¡Middleware 'cors' añadido aquí!
 
     // Gestión de Usuarios (Users)
     // ** IMPORTANTE: Definir rutas específicas ANTES de apiResource para este prefijo **
@@ -50,11 +50,11 @@ Route::middleware('auth:sanctum')->group(function () {
     // Ruta para obtener los datos del usuario autenticado (ruta '/user' sin prefijo de recurso)
     // GET /api/user
     // También es una ruta específica, aunque el conflicto aquí es menor, por claridad se puede dejar aquí.
-     Route::get('/user', function (Request $request) {
-         $user = $request->user();
-         $user->load('roles.permissions');
-         return $user->makeHidden(['password', 'remember_token']);
-     });
+    Route::get('/user', function (Request $request) {
+        $user = $request->user();
+        $user->load('roles.permissions');
+        return $user->makeHidden(['password', 'remember_token']);
+    });
 
     // Define las rutas estándar de recursos (CRUD) para la gestión de usuarios.
     // GET /api/users, POST /api/users, GET /api/users/{user}, PUT/PATCH /api/users/{user}, DELETE /api/users/{user}
@@ -66,7 +66,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Invalida el token Sanctum actual del usuario autenticado.
     // POST /api/auth/logout
     // Colocada después de apiResource('users') ya que usa un prefijo de grupo 'auth', no conflicto directo.
-     Route::post('/auth/logout', [AuthController::class, 'logout']);
+    Route::post('/auth/logout', [AuthController::class, 'logout']);
 
 
     // Gestión de Empleados (Employees)

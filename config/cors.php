@@ -17,13 +17,16 @@ return [
 
     'paths' => ['api/*', 'sanctum/csrf-cookie'],
 
-    'allowed_methods' => ['*'],
+    'allowed_methods' => ['POST', 'GET', 'OPTIONS', 'PUT', 'PATCH', 'DELETE'], // Métodos explícitos
 
-    'allowed_origins' => ['*'],
+    'allowed_origins' => [
+        '*',
+        'http://localhost:4200', // Asegúrate de que tu frontend esté en este puerto
+    ],
 
     'allowed_origins_patterns' => [],
 
-    'allowed_headers' => ['*'],
+    'allowed_headers' => ['Authorization', 'Content-Type'], // ¡Modifica esta línea!
 
     'exposed_headers' => [],
 

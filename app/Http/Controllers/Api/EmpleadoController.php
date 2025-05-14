@@ -20,13 +20,13 @@ class EmpleadoController extends Controller
     {
         // Aplica middleware para proteger los metodos CRUD de empleados
         // Asegura que solo usuarios con 'view employees' puedan listar y ver detalles
-        $this->middleware('permission:view employees', ['only' => ['index', 'getEmpleadosListSimple', 'show']]);
+        //$this->middleware('permission:view employees', ['only' => ['index', 'getEmpleadosListSimple', 'show']]);
         // Asegura que solo usuarios con 'create employees' puedan crear
-        $this->middleware('permission:create employees', ['only' => ['store']]);
+        //$this->middleware('permission:create employees', ['only' => ['store']]);
         // Asegura que solo usuarios con 'edit employees' puedan actualizar
-        $this->middleware('permission:edit employees', ['only' => ['update']]);
+        //$this->middleware('permission:edit employees', ['only' => ['update']]);
         // Asegura que solo usuarios con 'delete employees' puedan eliminar
-        $this->middleware('permission:delete employees', ['only' => ['destroy']]);
+        //$this->middleware('permission:delete employees', ['only' => ['destroy']]);
          // Opcional: Si 'manage users' implica gestion de empleados tambien, puedes añadirlo a algunos
          // $this->middleware('permission:manage users', ['only' => ['index', 'store', 'show', 'update', 'destroy']]);
     }
@@ -139,7 +139,7 @@ class EmpleadoController extends Controller
      * @param  \App\Models\Empleado  $empleado // Inyeccion de modelo por Route Model Binding
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(EmpleadoRequest $request, Empleado $empleado) // Si no usas FormRequest, cambia a Request $request
+    public function update(EmpleadoRequest $request, Empleado $empleado) 
     {
          // El permiso 'edit employees' se verifica automaticamente por el middleware.
          Log::info('Intentando actualizar empleado.', ['empleado_id' => $empleado->id, 'user_id' => Auth::id(), 'data' => $request->all()]);
