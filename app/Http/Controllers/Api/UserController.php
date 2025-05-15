@@ -39,7 +39,7 @@ class UserController extends Controller
 
         try {
             // Obtener todos los usuarios cargando sus roles y permisos asociados
-            $users = Usuario::with('roles', 'permissions')->get(); // O usar paginacion: Usuario::with('roles', 'permissions')->paginate(10);
+            $users = Usuario::with('roles', 'permissions', 'empleado')->get(); // O usar paginacion: Usuario::with('roles', 'permissions')->paginate(10);
 
             // Ocultar atributos sensibles antes de enviar la respuesta al frontend
             $users->each(function ($user) {

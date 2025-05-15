@@ -17,7 +17,7 @@ class EntradasSalidasGrua extends Model
         'operador_id', // Usas operador_id en lugar de empleado_id
         'fecha_hora_entrada',
         'fecha_hora_salida',
-        'destino', // Usas destino en lugar de ubicacion_origen/destino
+        'destino', // Usas destino en lugar de ubicacion_origen/destino y tipo_movimiento
         'kilometraje_entrada',
         'kilometraje_salida',
         // Confirmado: cliente_id no está aquí

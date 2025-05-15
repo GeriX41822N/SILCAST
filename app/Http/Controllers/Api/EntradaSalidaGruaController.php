@@ -3,33 +3,35 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\EntradasSalidasGrua; // Importa el modelo de Entradas/Salidas
-use App\Models\Grua; // Importa el modelo Grua (para relaciones o validaciones)
-use App\Models\Empleado; // Importa el modelo Empleado (para relaciones o validaciones)
+use App\Models\EntradasSalidasGrua;
+use App\Models\Grua;
+use App\Models\Empleado;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log; // Para logging
-use App\Http\Requests\EntradaSalidaGruaRequest; // Importa el Form Request para validación y autorización
-use Illuminate\Support\Facades\DB; // Para usar transacciones (opcional, pero recomendado para store/update)
-use Illuminate\Support\Carbon; // Importa Carbon para manejar fechas
-
+use Illuminate\Support\Facades\Log;
+use App\Http\Requests\EntradaSalidaGruaRequest;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 
 class EntradaSalidaGruaController extends Controller
 {
-
+    /**
+     * Muestra una lista de todos los movimientos de grúas.
+     * Requiere el permiso 'view movements'.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index()
     {
-        // Verificar permiso usando Spatie
         if (!Auth::user()->can('view movements')) {
             Log::warning('Intento de acceso no autorizado a lista de movimientos de grúas.', ['user_id' => Auth::id()]);
             return response()->json(['message' => 'No tienes permiso para ver la lista de movimientos de grúas.'], 403);
         }
 
         try {
-           
             $movimientos = EntradasSalidasGrua::with(['grua', 'operador'])
-                                             ->orderBy('fecha_hora_entrada', 'desc') // Ordenar por fecha/hora de entrada
-                                             ->get();
+                                                ->orderBy('fecha_hora_entrada', 'desc')
+                                                ->get();
 
             Log::info('Lista de movimientos de grúas cargada exitosamente.', ['user_id' => Auth::id(), 'count' => $movimientos->count()]);
             return response()->json($movimientos);
@@ -43,30 +45,24 @@ class EntradaSalidaGruaController extends Controller
     /**
      * Almacena un nuevo registro de entrada o salida de grúa.
      * Requiere permiso 'create movements'.
-     * @param EntradaSalidaGruaRequest $request // Usa el Form Request para validación
+     *
+     * @param EntradaSalidaGruaRequest $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(EntradaSalidaGruaRequest $request)
     {
-        // La autorización ya se verifica en EntradaSalidaGruaRequest
-        // if (!Auth::user()->can('create movements')) { ... }
-
-        DB::beginTransaction(); // Iniciar transacción
+        DB::beginTransaction();
 
         try {
-            // Crear el registro de movimiento con los datos validados
-            // El Form Request ya asegura que los datos son válidos y autorizados
             $movimiento = EntradasSalidasGrua::create($request->validated());
-
-            DB::commit(); // Confirmar transacción
+            DB::commit();
 
             Log::info('Registro de movimiento de grúa creado exitosamente.', ['movimiento_id' => $movimiento->id, 'user_id' => Auth::id()]);
-            // Cargar relaciones para la respuesta
-            // ¡CORREGIDO! Usamos 'operador' en lugar de 'empleado'
             $movimiento->load(['grua', 'operador']);
-            return response()->json($movimiento, 201); // Código 201 Created
+            return response()->json($movimiento, 201);
 
         } catch (\Exception $e) {
-            DB::rollBack(); // Revertir transacción
+            DB::rollBack();
             Log::error('Error al crear registro de movimiento de grúa: ' . $e->getMessage(), ['exception' => $e, 'user_id' => Auth::id(), 'request_data' => $request->all()]);
             return response()->json(['message' => 'Error interno del servidor al crear registro de movimiento de grúa.', 'error' => $e->getMessage()], 500);
         }
@@ -75,28 +71,27 @@ class EntradaSalidaGruaController extends Controller
     /**
      * Muestra un registro de entrada/salida de grúa específico.
      * Requiere permiso 'view movements'.
+     *
      * @param int $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show(int $id)
     {
-          // Verificar permiso usando Spatie
         if (!Auth::user()->can('view movements')) {
-              Log::warning('Intento de ver movimiento de grúa no autorizado.', ['user_id' => Auth::id(), 'movimiento_id' => $id]);
-             return response()->json(['message' => 'No tienes permiso para ver este registro de movimiento de grúa.'], 403);
-         }
+            Log::warning('Intento de ver movimiento de grúa no autorizado.', ['user_id' => Auth::id(), 'movimiento_id' => $id]);
+            return response()->json(['message' => 'No tienes permiso para ver este registro de movimiento de grúa.'], 403);
+        }
 
         try {
-            // Encontrar el movimiento por su ID y cargar relaciones
             $movimiento = EntradasSalidasGrua::with(['grua', 'operador'])->findOrFail($id);
-
             Log::info('Registro de movimiento de grúa encontrado.', ['movimiento_id' => $movimiento->id, 'user_id' => Auth::id()]);
             return response()->json($movimiento);
 
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-              Log::warning('Registro de movimiento de grúa no encontrado.', ['movimiento_id' => $id, 'user_id' => Auth::id()]);
-              return response()->json(['message' => 'Registro de movimiento de grúa no encontrado.'], 404);
+            Log::warning('Registro de movimiento de grúa no encontrado.', ['movimiento_id' => $id, 'user_id' => Auth::id()]);
+            return response()->json(['message' => 'Registro de movimiento de grúa no encontrado.'], 404);
         } catch (\Exception $e) {
-              Log::error('Error al mostrar registro de movimiento de grúa: ' . $e->getMessage(), ['exception' => $e, 'movimiento_id' => $id, 'user_id' => Auth::id()]);
+            Log::error('Error al mostrar registro de movimiento de grúa: ' . $e->getMessage(), ['exception' => $e, 'movimiento_id' => $id, 'user_id' => Auth::id()]);
             return response()->json(['message' => 'Error interno del servidor al mostrar registro de movimiento de grúas.'], 500);
         }
     }
@@ -104,34 +99,30 @@ class EntradaSalidaGruaController extends Controller
     /**
      * Actualiza un registro de entrada/salida de grúa específico.
      * Requiere permiso 'edit movements'.
-     * @param EntradaSalidaGruaRequest $request // Usa el Form Request para validación
+     *
+     * @param EntradaSalidaGruaRequest $request
      * @param int $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(EntradaSalidaGruaRequest $request, int $id)
     {
-
-        DB::beginTransaction(); // Iniciar transacción
+        DB::beginTransaction();
 
         try {
-            // Encontrar el registro de movimiento
             $movimiento = EntradasSalidasGrua::findOrFail($id);
-         // Actualizar el registro de movimiento con los datos validados
             $movimiento->update($request->validated());
-
-            DB::commit(); // Confirmar transacción
+            DB::commit();
 
             Log::info('Registro de movimiento de grúa actualizado exitosamente.', ['movimiento_id' => $movimiento->id, 'user_id' => Auth::id()]);
-              // Cargar relaciones para la respuesta
-             // ¡CORREGIDO! Usamos 'operador' en lugar de 'empleado'
-             $movimiento->load(['grua', 'operador']);
+            $movimiento->load(['grua', 'operador']);
             return response()->json($movimiento);
 
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-              DB::rollBack(); // Revertir transacción
-              Log::warning('Registro de movimiento de grúa no encontrado para actualizar.', ['movimiento_id' => $id, 'user_id' => Auth::id()]);
-              return response()->json(['message' => 'Registro de movimiento de grúa no encontrado.'], 404);
+            DB::rollBack();
+            Log::warning('Registro de movimiento de grúa no encontrado para actualizar.', ['movimiento_id' => $id, 'user_id' => Auth::id()]);
+            return response()->json(['message' => 'Registro de movimiento de grúa no encontrado.'], 404);
         } catch (\Exception $e) {
-            DB::rollBack(); // Revertir transacción
+            DB::rollBack();
             Log::error('Error al actualizar registro de movimiento de grúa: ' . $e->getMessage(), ['exception' => $e, 'movimiento_id' => $id, 'user_id' => Auth::id(), 'request_data' => $request->all()]);
             return response()->json(['message' => 'Error interno del servidor al actualizar registro de movimiento de grúa.', 'error' => $e->getMessage()], 500);
         }
@@ -140,31 +131,26 @@ class EntradaSalidaGruaController extends Controller
     /**
      * Elimina un registro de entrada/salida de grúa específico.
      * Requiere permiso 'delete movements'.
+     *
      * @param int $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(int $id)
     {
-        // Verificar permiso usando Spatie
         if (!Auth::user()->can('delete movements')) {
-              Log::warning('Intento de eliminar movimiento de grúa no autorizado.', ['user_id' => Auth::id(), 'movimiento_id' => $id]);
-             return response()->json(['message' => 'No tienes permiso para eliminar registros de movimientos de grúas.'], 403);
-         }
+            Log::warning('Intento de eliminar movimiento de grúa no autorizado.', ['user_id' => Auth::id(), 'movimiento_id' => $id]);
+            return response()->json(['message' => 'No tienes permiso para eliminar registros de movimientos de grúas.'], 403);
+        }
 
         try {
-            // Encontrar el registro de movimiento
             $movimiento = EntradasSalidasGrua::findOrFail($id);
-
-            // Eliminar el registro de movimiento
             $movimiento->delete();
-
             Log::info('Registro de movimiento de grúa eliminado exitosamente.', ['movimiento_id' => $id, 'user_id' => Auth::id()]);
-
-            // Devolver una respuesta de éxito sin contenido
-            return response()->json(null, 204); // Código 204 No Content
+            return response()->json(null, 204);
 
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-              Log::warning('Registro de movimiento de grúa no encontrado para eliminar.', ['movimiento_id' => $id, 'user_id' => Auth::id()]);
-              return response()->json(['message' => 'Registro de movimiento de grúa no encontrado.'], 404);
+            Log::warning('Registro de movimiento de grúa no encontrado para eliminar.', ['movimiento_id' => $id, 'user_id' => Auth::id()]);
+            return response()->json(['message' => 'Registro de movimiento de grúa no encontrado.'], 404);
         } catch (\Exception $e) {
             Log::error('Error al eliminar registro de movimiento de grúa: ' . $e->getMessage(), ['exception' => $e, 'movimiento_id' => $id, 'user_id' => Auth::id()]);
             return response()->json(['message' => 'Error interno del servidor al eliminar registro de movimiento de grúa.', 'error' => $e->getMessage()], 500);
@@ -174,58 +160,44 @@ class EntradaSalidaGruaController extends Controller
     /**
      * Obtiene registros de entrada/salida de grúas filtrados por rango de fechas y/o grúa.
      * Requiere permiso 'view movements'.
+     *
      * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function filterByDate(Request $request) // Nombre del método ajustado para reflejar que también puede filtrar por grúa
+    public function filterByDate(Request $request)
     {
-        // Verificar permiso usando Spatie
         if (!Auth::user()->can('view movements')) {
             Log::warning('Intento de acceso no autorizado a filtro de movimientos de grúas.', ['user_id' => Auth::id()]);
             return response()->json(['message' => 'No tienes permiso para ver la lista de movimientos de grúas.'], 403);
         }
 
         try {
-            // Obtener los parámetros del request
             $startDate = $request->query('start_date');
             $endDate = $request->query('end_date');
-            $gruaId = $request->query('grua_id'); // Obtener ID de grúa del request
+            $gruaId = $request->query('grua_id');
 
-            // Validar que al menos un filtro fue proporcionado (fecha o grúa)
             if (empty($startDate) && empty($endDate) && empty($gruaId)) {
-                 // Si no se proporcionan filtros, devolver todos los movimientos (comportamiento por defecto)
-                 // O podrías devolver un error 422 si al menos un filtro es obligatorio
-                 Log::info('Filtro de movimientos llamado sin parámetros, devolviendo todos los movimientos.', ['user_id' => Auth::id()]);
-                 return $this->index(); // Llama al método index para obtener todos los movimientos
-             }
+                Log::info('Filtro de movimientos llamado sin parámetros, devolviendo todos los movimientos.', ['user_id' => Auth::id()]);
+                return $this->index();
+            }
 
-            // Iniciar la consulta con las relaciones necesarias
-            // ¡CORREGIDO! Usamos 'operador' en lugar de 'empleado'
             $query = EntradasSalidasGrua::with(['grua', 'operador']);
 
-            // Aplicar filtro por fecha de inicio si se proporciona
             if (!empty($startDate)) {
-                // Usar Carbon para asegurar formato y añadir la hora de inicio del día
                 $start = Carbon::parse($startDate)->startOfDay();
-                $query->where('fecha_hora_entrada', '>=', $start); // Filtrar por fecha_hora_entrada
+                $query->where('fecha_hora_entrada', '>=', $start);
             }
 
-            // Aplicar filtro por fecha de fin si se proporciona
             if (!empty($endDate)) {
-                // Usar Carbon para asegurar formato y añadir la hora de fin del día
-                 $end = Carbon::parse($endDate)->endOfDay();
-                $query->where('fecha_hora_entrada', '<=', $end); // Filtrar por fecha_hora_entrada
+                $end = Carbon::parse($endDate)->endOfDay();
+                $query->where('fecha_hora_entrada', '<=', $end);
             }
 
-            // Aplicar filtro por grúa si se proporciona
             if (!empty($gruaId)) {
-                 // Opcional: Verificar si la grúa existe antes de filtrar
-                 // try { Grua::findOrFail($gruaId); } catch (\Exception $e) { return response()->json(['message' => 'La Grúa seleccionada no existe.'], 404); }
-                 $query->where('grua_id', $gruaId);
+                $query->where('grua_id', $gruaId);
             }
 
-
-            // Ordenar los resultados
-            $movimientos = $query->orderBy('fecha_hora_entrada', 'desc')->get(); // Ordenar por fecha_hora_entrada
+            $movimientos = $query->orderBy('fecha_hora_entrada', 'desc')->get();
 
             Log::info('Lista de movimientos de grúas filtrada cargada exitosamente.', [
                 'user_id' => Auth::id(),
@@ -243,49 +215,38 @@ class EntradaSalidaGruaController extends Controller
         }
     }
 
-      /**
-      * Obtiene los registros de movimientos de una grúa específica.
-      * Requiere permiso 'view movements'.
-      * @param int $gruaId
-      *
-      * NOTA: Este método podría ser redundante si filterByDate maneja el filtro por grua_id.
-      * Si solo necesitas filtrar por grúa, puedes usar este método. Si necesitas combinar
-      * filtro por fecha Y grúa, filterByDate es más adecuado.
-      * Mantenemos este método por ahora si lo necesitas separado.
-      */
-     public function getMovimientosByGrua(int $gruaId)
-     {
-           // Verificar permiso
-         if (!Auth::user()->can('view movements')) {
-               Log::warning('Intento de ver movimientos por grúa no autorizado.', ['user_id' => Auth::id(), 'grua_id' => $gruaId]);
-              return response()->json(['message' => 'No tienes permiso para ver estos movimientos.'], 403);
-          }
+    /**
+     * Obtiene los registros de movimientos de una grúa específica.
+     * Requiere permiso 'view movements'.
+     *
+     * @param int $gruaId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getMovimientosByGrua(int $gruaId)
+    {
+        if (!Auth::user()->can('view movements')) {
+            Log::warning('Intento de ver movimientos por grúa no autorizado.', ['user_id' => Auth::id(), 'grua_id' => $gruaId]);
+            return response()->json(['message' => 'No tienes permiso para ver estos movimientos.'], 403);
+        }
 
-         try {
-               // Opcional: Encontrar la grúa para asegurar que existe.
-               // Si la grúa no existe, findOrFail lanzará una excepción ModelNotFoundException.
-               $grua = Grua::findOrFail($gruaId);
-               Log::info('Grúa encontrada para filtrar movimientos.', ['grua_id' => $gruaId, 'user_id' => Auth::id()]);
+        try {
+            $grua = Grua::findOrFail($gruaId);
+            Log::info('Grúa encontrada para filtrar movimientos.', ['grua_id' => $gruaId, 'user_id' => Auth::id()]);
 
+            $movimientos = EntradasSalidasGrua::where('grua_id', $gruaId)
+                                                ->with(['grua', 'operador'])
+                                                ->orderBy('fecha_hora_entrada', 'desc')
+                                                ->get();
 
-             $movimientos = EntradasSalidasGrua::where('grua_id', $gruaId)
-                                              // ¡CORREGIDO! Usamos 'operador' en lugar de 'empleado'
-                                             ->with(['grua', 'operador'])
-                                              ->orderBy('fecha_hora_entrada', 'desc') // Ordenar por fecha/hora de entrada
-                                              ->get();
+            Log::info('Movimientos para grúa cargados exitosamente.', ['grua_id' => $gruaId, 'user_id' => Auth::id(), 'count' => $movimientos->count()]);
+            return response()->json($movimientos);
 
-               Log::info('Movimientos para grúa cargados exitosamente.', ['grua_id' => $gruaId, 'user_id' => Auth::id(), 'count' => $movimientos->count()]);
-             return response()->json($movimientos);
-
-          } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-               Log::warning('Grúa no encontrada al intentar obtener movimientos por grúa.', ['grua_id' => $gruaId, 'user_id' => Auth::id()]);
-               return response()->json(['message' => 'Grúa no encontrada.'], 404);
-          } catch (\Exception $e) {
-               Log::error('Error al cargar movimientos por grúa: ' . $e->getMessage(), ['exception' => $e, 'grua_id' => $gruaId, 'user_id' => Auth::id()]);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            Log::warning('Grúa no encontrada al intentar obtener movimientos por grúa.', ['grua_id' => $gruaId, 'user_id' => Auth::id()]);
+            return response()->json(['message' => 'Grúa no encontrada.'], 404);
+        } catch (\Exception $e) {
+            Log::error('Error al cargar movimientos por grúa: ' . $e->getMessage(), ['exception' => $e, 'grua_id' => $gruaId, 'user_id' => Auth::id()]);
             return response()->json(['message' => 'Error interno del servidor al cargar movimientos por grúa.'], 500);
         }
     }
-
-    // Puedes añadir métodos para filtrar por empleado, etc.
-
 }
