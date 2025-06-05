@@ -1,0 +1,278 @@
+/* 🌄 Imagen de portada Galería */
+.gallery-hero {
+  position: relative;
+  width: 100%;
+  height: 60vh;
+  overflow: hidden;
+  margin-bottom: 40px;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .overlay-texto {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 3rem 10%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: white;
+    background: rgba(0, 0, 0, 0.6);
+    text-align: center;
+
+    h1 {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+      color: var(--color-primary);
+    }
+
+    p {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+}
+
+.gallery-content {
+  padding: 0 5%;
+  margin-bottom: 60px;
+}
+
+.gallery-section {
+  margin-bottom: 60px;
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 40px;
+
+    h2 {
+      font-size: 2.5rem;
+      color: var(--color-default);
+      margin-bottom: 15px;
+    }
+
+    p {
+      font-size: 1.1rem;
+      color: var(--color-secondary);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+  }
+}
+
+/* Base para Carruseles */
+.carousel-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  width: 95%; /* Asegura que el contenedor ocupe todo el ancho disponible */
+}
+
+.carousel-arrow {
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 15px;
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  font-size: 2rem;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: var(--color-primary);
+  }
+}
+
+.prev-arrow {
+  left: 5px;
+}
+
+.next-arrow {
+  right: 5px;
+}
+
+.arrow-icon {
+  // Sin estilos propios, usa el tamaño y color del botón padre
+}
+
+
+/* Estilos comunes para ambos carruseles con preview (Grúas y Servicios Industriales) */
+.gruas-carousel-preview-container,
+.servicios-carousel-preview-container {
+  height: 55vh;
+  padding: 0 40px;
+
+  .carousel-images-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    gap: 10px;
+
+    .carousel-preview-image {
+      flex-shrink: 0;
+      /* AUMENTAMOS EL TAMAÑO DE LAS IMÁGENES DE PREVIEW */
+      width: 120px; /* Tamaño un poco más grande */
+      height: 90px; /* Tamaño un poco más grande */
+      overflow: hidden;
+      border-radius: 8px;
+      box-shadow: var(--box-shadow-default);
+      opacity: 0.6;
+      transition: transform 0.5s ease, opacity 0.5s ease;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      &.prev-image {
+        transform: translateX(-10%) scale(0.95);
+      }
+      &.next-image {
+        transform: translateX(10%) scale(0.95);
+      }
+    }
+
+    .carousel-main-image {
+      flex-grow: 1;
+      flex-shrink: 1;
+      /* Ajuste del width para reflejar el NUEVO tamaño de las imágenes preview */
+      width: calc(100% - (120px * 2) - (10px * 2));
+      max-width: 700px;
+      height: 100%;
+      overflow: hidden;
+      border-radius: 8px;
+      box-shadow: var(--box-shadow-default);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.5s ease, opacity 0.5s ease;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+  }
+}
+
+
+/* Responsive */
+@media (max-width: 992px) {
+  .gallery-hero {
+    height: 40vh;
+    .overlay-texto {
+      h1 {
+        font-size: 2.5rem;
+      }
+      p {
+        font-size: 1rem;
+      }
+    }
+  }
+
+  .gallery-section .section-header h2 {
+    font-size: 2rem;
+  }
+
+  .gruas-carousel-preview-container,
+  .servicios-carousel-preview-container {
+    height: 45vh;
+    padding: 0 30px;
+
+    .carousel-images-wrapper {
+      .carousel-preview-image {
+        /* AUMENTAMOS EL TAMAÑO DE LAS IMÁGENES DE PREVIEW EN RESPONSIVE */
+        width: 160px;
+        height: 140px;
+      }
+      .carousel-main-image {
+        /* Ajuste del width para reflejar el NUEVO tamaño de las imágenes preview */
+        width: calc(100% - (90px * 2) - (10px * 2));
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .gallery-hero {
+    height: 30vh;
+    .overlay-texto {
+      padding: 2rem 5%;
+      h1 {
+        font-size: 2rem;
+      }
+      p {
+        font-size: 0.9rem;
+      }
+    }
+  }
+
+  .gallery-section {
+    margin-bottom: 40px;
+    .section-header {
+      margin-bottom: 25px;
+      h2 {
+        font-size: 1.8rem;
+      }
+      p {
+        font-size: 0.9rem;
+      }
+    }
+  }
+
+  .carousel-arrow {
+    padding: 10px;
+    width: 40px;
+    height: 40px;
+    font-size: 1.5rem;
+    left: 0px;
+    right: 0px;
+  }
+
+  .gruas-carousel-preview-container,
+  .servicios-carousel-preview-container {
+    height: 35vh;
+    padding: 0 10px;
+
+    .carousel-images-wrapper {
+      flex-direction: column;
+      gap: 10px;
+
+      .carousel-preview-image {
+        width: 70%;
+        height: 90px;
+        opacity: 0.8;
+        transform: none;
+      }
+      .carousel-main-image {
+        width: 100%;
+        max-width: unset;
+        height: 200px;
+      }
+    }
+  }
+}

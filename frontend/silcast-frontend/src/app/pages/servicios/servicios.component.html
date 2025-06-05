@@ -1,0 +1,36 @@
+<section class="services-carousel">
+  <h2>Nuestros Servicios</h2>
+
+  <div class="carousel-container">
+    <!-- Flechas de navegación -->
+    <button class="arrow left" (click)="anterior()">‹</button>
+
+    <!-- Carrusel con todos los servicios -->
+    <div class="carousel-track">
+      <div
+        class="service-card"
+        *ngFor="let servicio of servicios; let i = index"
+        [class.active]="isActivo(i)"
+        (click)="setSlide(i)"
+      >
+        <img [src]="servicio.imagen" [alt]="servicio.titulo" />
+        <h3>{{ servicio.titulo }}</h3>
+        <p>{{ servicio.descripcion }}</p>
+      </div>
+    </div>
+
+    <!-- Flechas de navegación -->
+    <button class="arrow right" (click)="siguiente()">›</button>
+  </div>
+
+  <!-- Detalle del servicio activo -->
+  <div class="servicio-detalle" *ngIf="servicios[slideActivo]">
+    <img [src]="servicios[slideActivo].imagen" alt="Detalle" />
+    <h3>{{ servicios[slideActivo].titulo }}</h3>
+    <ul>
+      <li *ngFor="let d of servicios[slideActivo].detalles">
+        {{ d }}
+      </li>
+    </ul>
+  </div>
+</section>

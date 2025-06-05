@@ -1,0 +1,148 @@
+<div class="admin-hero">
+  <h1>{{ isEditing ? 'Editar Detalles de Grúa' : 'Registrar Nueva Grúa' }}</h1>
+  <p>Gestione la información detallada de cada grúa en el sistema.</p>
+</div>
+
+<div class="admin-page">
+  <header class="admin-header">
+    <div class="header-title">
+      <h1>Formulario de Grúa</h1>
+    </div>
+  </header>
+
+  <main class="admin-content">
+    <h2>{{ isEditing ? 'Actualizar Información de Grúa' : 'Crear Nuevo Registro de Grúa' }}</h2>
+
+    <div class="card p-4">
+      <div *ngIf="showSuccessMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i> {{ successMessageText }}
+        <button type="button" class="btn-close" aria-label="Close" (click)="hideSuccessMessage()"></button>
+      </div>
+
+      <div class="alert alert-danger" *ngIf="generalError">
+        <i class="fas fa-exclamation-triangle me-2"></i> {{ generalError }}
+      </div>
+
+      <div class="alert alert-warning" *ngIf="validationErrors && !generalError">
+        <i class="fas fa-exclamation-circle me-2"></i> Por favor, revisa los errores en el formulario.
+      </div>
+
+      <form (ngSubmit)="saveGrua()" #gruaForm="ngForm">
+
+        <div class="mb-3">
+          <label for="unidad" class="form-label">Unidad/Placa:</label>
+          <input type="text" class="form-control" id="unidad" [(ngModel)]="grua.unidad" name="unidad" required>
+          <div *ngIf="getValidationError('unidad')" class="text-danger">
+            {{ getValidationError('unidad') }}
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="tipo" class="form-label">Tipo:</label>
+          <select class="form-select" id="tipo" [(ngModel)]="grua.tipo" name="tipo" required>
+            <option [value]="null" disabled>Seleccione un tipo de grúa</option>
+            <option *ngFor="let tipo of tiposGrua" [value]="tipo">{{ tipo }}</option>
+          </select>
+          <div *ngIf="getValidationError('tipo')" class="text-danger">
+            {{ getValidationError('tipo') }}
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="combustible" class="form-label">Combustible:</label>
+          <select class="form-select" id="combustible" [(ngModel)]="grua.combustible" name="combustible" required>
+            <option [value]="null" disabled>Seleccione un tipo de combustible</option>
+            <option *ngFor="let combustible of tiposCombustible" [value]="combustible">{{ combustible }}</option>
+          </select>
+          <div *ngIf="getValidationError('combustible')" class="text-danger">
+            {{ getValidationError('combustible') }}
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="capacidad_toneladas" class="form-label">Capacidad (Ton.):</label>
+          <input type="number" class="form-control" id="capacidad_toneladas" [(ngModel)]="grua.capacidad_toneladas" name="capacidad_toneladas" step="0.01" required>
+          <div *ngIf="getValidationError('capacidad_toneladas')" class="text-danger">
+            {{ getValidationError('capacidad_toneladas') }}
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="pluma_telescopica_metros" class="form-label">Pluma Telescópica (Mts.):</label>
+          <input type="number" class="form-control" id="pluma_telescopica_metros" [(ngModel)]="grua.pluma_telescopica_metros" name="pluma_telescopica_metros" step="0.01">
+          <small class="form-text text-muted">Campo opcional.</small>
+          <div *ngIf="getValidationError('pluma_telescopica_metros')" class="text-danger">
+            {{ getValidationError('pluma_telescopica_metros') }}
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="estado" class="form-label">Estado:</label>
+          <select class="form-select" id="estado" [(ngModel)]="grua.estado" name="estado" required>
+            <option [value]="null" disabled>Seleccione un estado</option>
+            <option value="disponible">Disponible</option>
+            <option value="en_uso">En Uso</option>
+            <option value="mantenimiento">Mantenimiento</option>
+            <option value="fuera_de_servicio">Fuera de Servicio</option>
+          </select>
+          <div *ngIf="getValidationError('estado')" class="text-danger">
+            {{ getValidationError('estado') }}
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="documentacion" class="form-label">Documentación (Ruta/URL):</label>
+          <input type="text" class="form-control" id="documentacion" [(ngModel)]="grua.documentacion" name="documentacion">
+          <small class="form-text text-muted">Campo opcional.</small>
+          <div *ngIf="getValidationError('documentacion')" class="text-danger">
+            {{ getValidationError('documentacion') }}
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="operador_id" class="form-label">Operador Asignado:</label>
+          <select class="form-select" id="operador_id" [(ngModel)]="grua.operador_id" name="operador_id">
+            <option [value]="null">-- Seleccionar Operador --</option>
+            <option *ngFor="let operador of operadores" [value]="operador.id">{{ operador.nombre }} {{ operador.apellido_paterno }}</option>
+          </select>
+          <small class="form-text text-muted">Campo opcional.</small>
+          <div *ngIf="getValidationError('operador_id')" class="text-danger">
+            {{ getValidationError('operador_id') }}
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="ayudante_id" class="form-label">Ayudante Asignado:</label>
+          <select class="form-select" id="ayudante_id" [(ngModel)]="grua.ayudante_id" name="ayudante_id">
+            <option [value]="null">-- Seleccionar Ayudante --</option>
+            <option *ngFor="let ayudante of operadores" [value]="ayudante.id">{{ ayudante.nombre }} {{ ayudante.apellido_paterno }}</option>
+          </select>
+          <small class="form-text text-muted">Campo opcional.</small>
+          <div *ngIf="getValidationError('ayudante_id')" class="text-danger">
+            {{ getValidationError('ayudante_id') }}
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="precio_hora" class="form-label">Precio por Hora:</label>
+          <input type="number" class="form-control" id="precio_hora" [(ngModel)]="grua.precio_hora" name="precio_hora" step="0.01">
+          <small class="form-text text-muted">Campo opcional.</small>
+          <div *ngIf="getValidationError('precio_hora')" class="text-danger">
+            {{ getValidationError('precio_hora') }}
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-end mt-4">
+          <button type="button" class="btn btn-secondary me-3" (click)="cancel()" [disabled]="isLoading">
+            <i class="fas fa-times-circle"></i> Cancelar
+          </button>
+          <button type="submit" class="btn btn-success" [disabled]="isLoading || gruaForm.invalid">
+            <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            <i class="fas fa-save me-2" *ngIf="!isLoading"></i>
+            {{ isLoading ? 'Guardando...' : (isEditing ? 'Actualizar Grúa' : 'Guardar Grúa') }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>

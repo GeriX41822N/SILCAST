@@ -1,0 +1,106 @@
+<div class="admin-hero">
+  <h1>Gestión de Proveedores</h1>
+  <p>Administra la información detallada de tus proveedores y sus datos de contacto.</p>
+</div>
+
+<div class="admin-page">
+  <header class="admin-header">
+    <div class="header-title">
+      <h1>Listado de Proveedores</h1>
+    </div>
+  </header>
+
+  <main class="admin-content">
+    <h2>Detalle y Administración</h2>
+
+    <button class="btn btn-primary mb-3" (click)="showCreateForm()" *ngIf="authService.hasPermission('create suppliers')">Agregar Nuevo Proveedor</button>
+
+    <div class="card mb-4" *ngIf="showForm">
+      <div class="card-header">
+        {{ isEditing ? 'Editar Proveedor' : 'Agregar Nuevo Proveedor' }}
+      </div>
+      <div class="card-body">
+        <form (ngSubmit)="saveProveedor()">
+          <div class="mb-3" *ngIf="isEditing">
+            <label for="id" class="form-label">ID:</label>
+            <input type="text" class="form-control" id="id" [ngModel]="nuevoProveedor.id" name="id" disabled>
+          </div>
+
+          <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre:</label>
+            <input type="text" class="form-control" id="nombre" [(ngModel)]="nuevoProveedor.nombre" name="nombre" required>
+          </div>
+          <div class="mb-3">
+            <label for="contacto" class="form-label">Contacto:</label>
+            <input type="text" class="form-control" id="contacto" [(ngModel)]="nuevoProveedor.contacto" name="contacto">
+          </div>
+          <div class="mb-3">
+            <label for="telefono" class="form-label">Teléfono:</label>
+            <input type="text" class="form-control" id="telefono" [(ngModel)]="nuevoProveedor.telefono" name="telefono">
+          </div>
+          <div class="mb-3">
+            <label for="correo" class="form-label">Correo:</label>
+            <input type="email" class="form-control" id="correo" [(ngModel)]="nuevoProveedor.correo" name="correo">
+          </div>
+           <div class="mb-3">
+            <label for="direccion" class="form-label">Dirección:</label>
+            <input type="text" class="form-control" id="direccion" [(ngModel)]="nuevoProveedor.direccion" name="direccion">
+          </div>
+          <div class="mb-3">
+            <label for="notas" class="form-label">Notas:</label>
+            <textarea class="form-control" id="notas" [(ngModel)]="nuevoProveedor.notas" name="notas"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-success me-2" *ngIf="(!isEditing && authService.hasPermission('create suppliers')) || (isEditing && authService.hasPermission('edit suppliers'))">
+              {{ isEditing ? 'Actualizar Proveedor' : 'Guardar Proveedor' }}
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Cancelar</button>
+        </form>
+      </div>
+    </div>
+
+
+    <div *ngIf="isLoading">Cargando proveedores...</div>
+    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+    <div *ngIf="!isLoading && !error && proveedores.length > 0">
+      <div class="card">
+        <div class="card-header">Listado de Proveedores</div>
+        <div class="card-body p-0"> <div class="table-responsive"> <table class="table table-striped mb-0"> <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nombre</th>
+                  <th>Contacto</th>
+                  <th>Teléfono</th>
+                  <th>Correo</th>
+                  <th>Dirección</th>
+                  <th>Notas</th>
+                  <th *ngIf="authService.hasPermission('edit suppliers') || authService.hasPermission('delete suppliers')">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let proveedor of proveedores">
+                  <td>{{ proveedor.id }}</td>
+                  <td>{{ proveedor.nombre }}</td>
+                  <td>{{ proveedor.contacto }}</td>
+                  <td>{{ proveedor.telefono }}</td>
+                  <td>{{ proveedor.correo }}</td>
+                  <td>{{ proveedor.direccion }}</td>
+                  <td>{{ proveedor.notas }}</td>
+                  <td *ngIf="authService.hasPermission('edit suppliers') || authService.hasPermission('delete suppliers')">
+                    <button class="btn btn-sm btn-warning me-2" (click)="editProveedor(proveedor)" *ngIf="authService.hasPermission('edit suppliers')">Editar</button>
+                    <button class="btn btn-sm btn-danger" (click)="deleteProveedor(proveedor.id!)" *ngIf="authService.hasPermission('delete suppliers')">Eliminar</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!isLoading && !error && proveedores.length === 0" class="no-users-message">
+      No hay proveedores registrados.
+    </div>
+  </main>
+</div>

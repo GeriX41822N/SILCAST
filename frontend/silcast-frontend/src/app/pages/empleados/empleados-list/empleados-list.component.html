@@ -1,0 +1,313 @@
+<div class="admin-hero">
+  <h1>Gestión de Empleados</h1>
+  <p>Administra la información detallada de tus colaboradores y sus cuentas de usuario.</p>
+</div>
+
+<div class="admin-page">
+  <header class="admin-header">
+    <div class="header-title">
+      <h1>Listado de Empleados</h1>
+    </div>
+  </header>
+
+  <main class="admin-content">
+    <h2>Detalle y Administración</h2>
+
+    <button class="btn btn-primary mb-3" (click)="showCreateForm()" *ngIf="canCreateEmployees()">Agregar Nuevo Empleado</button>
+
+    <div class="card mb-4" *ngIf="showForm">
+      <div class="card-header">
+        {{ isEditing ? 'Editar Empleado' : 'Agregar Nuevo Empleado' }}
+      </div>
+      <div class="card-body">
+        <form (ngSubmit)="saveEmpleado()">
+          <div class="mb-3" *ngIf="isEditing">
+            <label for="empleadoId" class="form-label">ID Empleado:</label>
+            <input type="text" class="form-control" id="empleadoId" [(ngModel)]="currentEmpleado.id" name="id" disabled>
+          </div>
+
+          <h4>Datos del Empleado</h4>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="numero_empleado" class="form-label">Número de Empleado:</label>
+              <input type="text" class="form-control" id="numero_empleado" [(ngModel)]="currentEmpleado.numero_empleado" name="numero_empleado" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="nombre" class="form-label">Nombre:</label>
+              <input type="text" class="form-control" id="nombre" [(ngModel)]="currentEmpleado.nombre" name="nombre" required>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="apellido_paterno" class="form-label">Apellido Paterno:</label>
+              <input type="text" class="form-control" id="apellido_paterno" [(ngModel)]="currentEmpleado.apellido_paterno" name="apellido_paterno" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="apellido_materno" class="form-label">Apellido Materno:</label>
+              <input type="text" class="form-control" id="apellido_materno" [(ngModel)]="currentEmpleado.apellido_materno" name="apellido_materno">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento:</label>
+              <input type="date" class="form-control" id="fecha_nacimiento" [(ngModel)]="currentEmpleado.fecha_nacimiento" name="fecha_nacimiento" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="correo_electronico" class="form-label">Correo Electrónico (Empleado):</label>
+              <input type="email" class="form-control" id="correo_electronico" [(ngModel)]="currentEmpleado.correo_electronico" name="correo_electronico" required>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="telefono" class="form-label">Teléfono:</label>
+              <input type="text" class="form-control" id="telefono" [(ngModel)]="currentEmpleado.telefono" name="telefono" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="fecha_ingreso" class="form-label">Fecha de Ingreso:</label>
+              <input type="date" class="form-control" id="fecha_ingreso" [(ngModel)]="currentEmpleado.fecha_ingreso" name="fecha_ingreso" required>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label for="nss" class="form-label">NSS:</label>
+              <input type="text" class="form-control" id="nss" [(ngModel)]="currentEmpleado.nss" name="nss">
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="rfc" class="form-label">RFC:</label>
+              <input type="text" class="form-control" id="rfc" [(ngModel)]="currentEmpleado.rfc" name="rfc">
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="curp" class="form-label">CURP:</label>
+              <input type="text" class="form-control" id="curp" [(ngModel)]="currentEmpleado.curp" name="curp">
+            </div>
+          </div>
+
+          <h4>Dirección</h4>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="calle" class="form-label">Calle:</label>
+              <input type="text" class="form-control" id="calle" [(ngModel)]="currentEmpleado.calle" name="calle" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="colonia" class="form-label">Colonia:</label>
+              <input type="text" class="form-control" id="colonia" [(ngModel)]="currentEmpleado.colonia" name="colonia" required>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label for="cp" class="form-label">Código Postal:</label>
+              <input type="text" class="form-control" id="cp" [(ngModel)]="currentEmpleado.cp" name="cp" required>
+            </div>
+            <div class="col-md-8 mb-3">
+              <label for="municipio" class="form-label">Municipio:</label>
+              <input type="text" class="form-control" id="municipio" [(ngModel)]="currentEmpleado.municipio" name="municipio" required>
+            </div>
+          </div>
+
+          <h4>Datos Bancarios y Puesto</h4>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="clabe" class="form-label">CLABE:</label>
+              <input type="text" class="form-control" id="clabe" [(ngModel)]="currentEmpleado.clabe" name="clabe">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="banco" class="form-label">Banco:</label>
+              <input type="text" class="form-control" id="banco" [(ngModel)]="currentEmpleado.banco" name="banco">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label for="puesto" class="form-label">Puesto:</label>
+              <input type="text" class="form-control" id="puesto" [(ngModel)]="currentEmpleado.puesto" name="puesto" required>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="area" class="form-label">Área:</label>
+              <input type="text" class="form-control" id="area" [(ngModel)]="currentEmpleado.area" name="area" required>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="turno" class="form-label">Turno:</label>
+              <input type="text" class="form-control" id="turno" [(ngModel)]="currentEmpleado.turno" name="turno" required>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="sdr" class="form-label">SDR:</label>
+              <input type="text" class="form-control" id="sdr" [(ngModel)]="currentEmpleado.sdr" name="sdr">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="sdr_imss" class="form-label">SDR IMSS:</label>
+              <input type="text" class="form-control" id="sdr_imss" [(ngModel)]="currentEmpleado.sdr_imss" name="sdr_imss">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label for="estado" class="form-label">Estado:</label>
+              <select class="form-control" id="estado" [(ngModel)]="currentEmpleado.estado" name="estado" required>
+                <option value="activo">Activo</option>
+                <option value="inactivo">Inactivo</option>
+                <option value="baja">Baja</option>
+              </select>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="fecha_baja" class="form-label">Fecha de Baja:</label>
+              <input type="date" class="form-control" id="fecha_baja" [(ngModel)]="currentEmpleado.fecha_baja" name="fecha_baja">
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="estado_civil" class="form-label">Estado Civil:</label>
+              <input type="text" class="form-control" id="estado_civil" [(ngModel)]="currentEmpleado.estado_civil" name="estado_civil">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="foto" class="form-label">Foto:</label>
+              <input type="text" class="form-control" id="foto" [(ngModel)]="currentEmpleado.foto" name="foto">
+              <small class="form-text text-muted">Ruta o nombre del archivo.</small>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="supervisor_id" class="form-label">Supervisor ID:</label>
+              <input type="number" class="form-control" id="supervisor_id" [(ngModel)]="currentEmpleado.supervisor_id" name="supervisor_id">
+              <small class="form-text text-muted">ID del empleado supervisor (opcional).</small>
+            </div>
+          </div>
+
+
+          <hr> <h4>Cuenta de Usuario y Roles (Opcional)</h4>
+          <p class="text-muted">Completa estos campos si este empleado tendrá una cuenta para acceder al sistema.</p>
+
+          <div class="mb-3">
+            <label for="email" class="form-label">Email (para acceso):</label>
+            <input type="email" class="form-control" id="email" [(ngModel)]="currentEmpleado.usuario.email" name="email" [required]="currentEmpleado.usuario.password || currentEmpleado.selectedRoles.length > 0">
+            <small class="form-text text-muted">Necesario si se asigna contraseña o roles.</small>
+          </div>
+
+          <div class="mb-3">
+            <label for="password" class="form-label">Password (para acceso):</label>
+            <input type="password" class="form-control" id="password" [(ngModel)]="currentEmpleado.usuario.password" name="password" [required]="!isEditing && (currentEmpleado.usuario.email || currentEmpleado.selectedRoles.length > 0)">
+            <small class="form-text text-muted" *ngIf="isEditing">Deja este campo vacío si no quieres cambiar la contraseña.</small>
+            <small class="form-text text-muted" *ngIf="!isEditing">Necesario si se crea una cuenta de usuario.</small>
+          </div>
+
+          <div class="mb-3" *ngIf="canEditEmployees()">
+            <label class="form-label">Roles:</label>
+            <div>
+              <div *ngFor="let role of roles" class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox"
+                       [id]="'role-' + role.id"
+                       [value]="role.id"
+                       [checked]="isRoleSelected(role.id)"
+                       (change)="onRoleChange(role.id, $event)">
+                <label class="form-check-label" [for]="'role-' + role.id">{{ role.name }}</label>
+              </div>
+            </div>
+          </div>
+
+
+          <button type="submit" class="btn btn-success me-2" *ngIf="(!isEditing && canCreateEmployees()) || (isEditing && canEditEmployees())">
+            {{ isEditing ? 'Actualizar Empleado' : 'Guardar Empleado' }}
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Cancelar</button>
+        </form>
+      </div>
+    </div>
+
+
+    <div *ngIf="isLoading">Cargando empleados...</div>
+
+    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+    <div *ngIf="!isLoading && !error && empleados.length > 0 && canViewEmployees()">
+      <div class="table-responsive"> <table class="table table-striped mb-0">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Número</th>
+              <th>Nombre Completo</th>
+              <th>Fecha Nacimiento</th>
+              <th>Correo Empleado</th>
+              <th>Teléfono</th>
+              <th>Fecha Ingreso</th>
+              <th>NSS</th>
+              <th>RFC</th>
+              <th>CURP</th>
+              <th>Dirección</th>
+              <th>CP</th>
+              <th>Municipio</th>
+              <th>CLABE</th>
+              <th>Banco</th>
+              <th>Puesto</th>
+              <th>Área</th>
+              <th>Turno</th>
+              <th>SDR</th>
+              <th>SDR IMSS</th>
+              <th>Estado</th>
+              <th>Fecha Baja</th>
+              <th>Foto</th>
+              <th>Supervisor ID</th>
+              <th>Estado Civil</th>
+              <th>Email Usuario</th>
+              <th>Roles Asignados</th>
+              <th *ngIf="canEditEmployees() || canDeleteEmployees()">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let empleado of empleados">
+              <td>{{ empleado.id }}</td>
+              <td>{{ empleado.numero_empleado }}</td>
+              <td>{{ empleado.nombre }} {{ empleado.apellido_paterno }} {{ empleado.apellido_materno }}</td>
+              <td>{{ empleado.fecha_nacimiento ? (empleado.fecha_nacimiento | date:'yyyy-MM-dd') : 'N/A' }}</td>
+              <td>{{ empleado.correo_electronico }}</td>
+              <td>{{ empleado.telefono }}</td>
+              <td>{{ empleado.fecha_ingreso ? (empleado.fecha_ingreso | date:'yyyy-MM-dd') : 'N/A' }}</td>
+              <td>{{ empleado.nss ? empleado.nss : 'N/A' }}</td>
+              <td>{{ empleado.rfc ? empleado.rfc : 'N/A' }}</td>
+              <td>{{ empleado.curp ? empleado.curp : 'N/A' }}</td>
+              <td>{{ empleado.calle }}, {{ empleado.colonia }}</td>
+              <td>{{ empleado.cp }}</td>
+              <td>{{ empleado.municipio }}</td>
+              <td>{{ empleado.clabe ? empleado.clabe : 'N/A' }}</td>
+              <td>{{ empleado.banco ? empleado.banco : 'N/A' }}</td>
+              <td>{{ empleado.puesto }}</td>
+              <td>{{ empleado.area }}</td>
+              <td>{{ empleado.turno }}</td>
+              <td>{{ empleado.sdr ? empleado.sdr : 'N/A' }}</td>
+              <td>{{ empleado.sdr_imss ? empleado.sdr_imss : 'N/A' }}</td>
+              <td>{{ empleado.estado }}</td>
+              <td>{{ empleado.fecha_baja ? (empleado.fecha_baja | date:'yyyy-MM-dd') : 'N/A' }}</td>
+              <td>{{ empleado.foto ? empleado.foto : 'N/A' }}</td>
+              <td>{{ empleado.supervisor_id ? empleado.supervisor_id : 'N/A' }}</td>
+              <td>{{ empleado.estado_civil ? empleado.estado_civil : 'N/A' }}</td>
+              <td>{{ empleado.usuario ? (empleado.usuario.email ? empleado.usuario.email : 'Sin cuenta') : 'Sin cuenta' }}</td>
+              <td>
+                <span *ngIf="empleado.usuario && empleado.usuario.roles && empleado.usuario.roles.length > 0">
+                  <span *ngFor="let role of empleado.usuario.roles; last as isLast">
+                    {{ role.name }}{{ !isLast ? ', ' : '' }}
+                  </span>
+                </span>
+                <span *ngIf="!empleado.usuario || !empleado.usuario.roles || empleado.usuario.roles.length === 0">Sin roles</span>
+              </td>
+              <td *ngIf="canEditEmployees() || canDeleteEmployees()">
+                <button class="btn btn-sm btn-warning me-2" (click)="editEmpleado(empleado)" *ngIf="canEditEmployees()">Editar</button>
+                <button class="btn btn-sm btn-danger" (click)="deleteEmpleado(empleado.id!)" *ngIf="canDeleteEmployees()">Eliminar</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div *ngIf="!isLoading && !error && empleados.length === 0 && canViewEmployees()" class="no-users-message">
+      No hay empleados registrados.
+    </div>
+
+    <div *ngIf="!isLoading && error && error.includes('No tienes permiso para ver la lista de empleados.')">
+      <div class="alert alert-warning">No tienes permiso para ver la lista de empleados.</div>
+    </div>
+  </main>
+</div>

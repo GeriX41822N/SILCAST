@@ -1,0 +1,40 @@
+<section class="hero-carousel">
+  <div class="carousel">
+    <div class="carousel-slide" *ngFor="let slide of slides; let i = index" [class.active]="i === currentSlide">
+      <div class="carousel-background" [ngStyle]="{ 'background-image': 'url(' + slide.imagen + ')' }">
+        <div class="carousel-overlay overlay-dark">
+          <div class="carousel-content">
+            <h2>{{ slide.titulo }}</h2>
+            <p>{{ slide.texto }}</p>
+            <a routerLink="/contacto" class="btn">Ponte en contacto</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Controles -->
+    <button class="carousel-control prev" (click)="prevSlide()">‹</button>
+    <button class="carousel-control next" (click)="nextSlide()">›</button>
+
+    <!-- Puntitos -->
+    <div class="carousel-indicators">
+      <span 
+        *ngFor="let slide of slides; let i = index" 
+        [class.active]="i === currentSlide" 
+        (click)="goToSlide(i)">
+      </span>
+    </div>
+  </div>
+</section>
+
+<section class="about">
+  <h2>Conoce más sobre SILCAST</h2>
+  <p>
+    Somos una empresa dedicada a brindar servicios integrales a la industria, ofreciendo una amplia gama de soluciones
+    que abarcan soldadura especializada, maquinados, servicios electromecánicos y mantenimiento preventivo, correctivo y
+    predictivo.
+  </p>
+  <a routerLink="/nosotros" class="btn">Obtén más información</a>
+</section>
+
+<app-servicios></app-servicios>

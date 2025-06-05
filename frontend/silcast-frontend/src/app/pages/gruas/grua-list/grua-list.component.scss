@@ -1,0 +1,384 @@
+/* --------------------------------------------------------------
+   # Global Styles and Responsive Utilities for SILCAST - GRUA LIST
+   -------------------------------------------------------------- */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap');
+
+:root {
+  --primary-blue: #1e88e5;
+  --light-gray: #f7f9fc;
+  --dark-gray: #2d3748;
+  --accent-orange: #fb8c00;
+  --border-color: #e2e8f0;
+  --card-shadow: rgba(0, 0, 0, 0.1);
+  --hover-shadow: rgba(30, 136, 229, 0.2);
+  --white: #ffffff;
+}
+
+.admin-hero {
+  width: 100%;
+  height: 250px;
+  background-image: url('/assets/images/hero-general.jpg'); /* Asegúrate de que esta ruta sea correcta */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding-top: 80px;
+  position: relative;
+  z-index: 1;
+
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+    color: #ffffff !important;
+  }
+
+  p {
+    font-size: 1.2rem;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    color: #ffffff !important;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: -1;
+  }
+}
+
+.admin-page {
+  font-family: 'Roboto', sans-serif;
+  color: var(--dark-gray);
+  background-color: var(--light-gray);
+  min-height: calc(100vh - 250px);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: -80px;
+  position: relative;
+  z-index: 2;
+  width: 100%;
+
+  @media (max-width: 768px) {
+    padding: 16px;
+  }
+
+  header.admin-header {
+    width: 100%;
+    max-width: 960px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding: 16px;
+    background-color: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 2px 6px var(--card-shadow);
+    border-bottom: none;
+
+    h1 {
+      font-size: 2rem;
+      color: #ffffff !important;
+      margin: 0;
+      font-weight: 500;
+    }
+  }
+
+  main.admin-content {
+    width: 100%;
+    max-width: 1600px; /* Ancho máximo para la tabla de grúas */
+    text-align: left;
+
+    h2 {
+      font-size: 1.6rem;
+      margin-bottom: 24px;
+      color: var(--dark-gray);
+      position: relative;
+      padding-bottom: 10px;
+      font-weight: 500;
+      text-align: center;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 3px;
+        background-color: var(--accent-orange);
+        border-radius: 2px;
+      }
+    }
+  }
+}
+
+/* Estilos para el componente de Grúas (fusionados con los de admin-list) */
+:host {
+  display: block;
+  min-height: calc(100vh - var(--header-height, 0px) - var(--footer-height, 0px));
+}
+
+/* Botón de acción principal (Registrar Nueva Grúa) */
+.btn-primary {
+  background-color: var(--primary-blue);
+  border-color: var(--primary-blue);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 0.3rem;
+
+  &:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+  }
+
+  i {
+    margin-right: 0.5rem;
+  }
+}
+
+/* Contenedor de la tabla (usando .card) */
+.card {
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.25rem var(--card-shadow);
+  margin-bottom: 2rem;
+}
+
+/* Encabezado de la tarjeta */
+.card-header {
+  background-color: #e9ecef;
+  border-bottom: 1px solid var(--border-color);
+  font-weight: bold;
+  padding: 0.75rem 1.25rem;
+  color: var(--dark-gray);
+}
+
+/* Cuerpo de la tarjeta (para la tabla) */
+.card-body {
+  padding: 0; /* Sin padding en el body de la tabla, lo maneja table-responsive */
+}
+
+/* Estilos para el contenedor responsive de la tabla */
+.table-responsive {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-height: 500px; /* Altura máxima para el scroll vertical */
+  overflow-y: auto;
+  border: none; /* Quitamos el borde aquí porque la tarjeta ya lo tiene */
+  border-radius: 0.5rem; /* Bordes redondeados para la tabla interna */
+  box-shadow: none; /* Quitamos la sombra aquí */
+}
+
+/* Estilos de la tabla */
+.table {
+  width: 100%;
+  min-width: 1600px; /* <--- FUERZA EL ANCHO MÍNIMO DE LA TABLA DE GRÚAS */
+  margin-bottom: 0;
+  color: var(--dark-gray);
+  border-collapse: collapse;
+  table-layout: auto;
+
+  th,
+  td {
+    padding: 0.75rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+    white-space: nowrap; /* Evita que el texto se rompa */
+  }
+
+  thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+    font-weight: bold;
+    color: #495057;
+    background-color: #f2f2f2; /* Fondo ligeramente diferente para el thead */
+  }
+
+  tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.03); /* Fondo alternativo más sutil */
+  }
+
+  tbody tr:hover {
+    background-color: #e3f2fd;
+    transition: background-color 0.3s ease;
+  }
+}
+
+/* Botones pequeños en la tabla (Editar, Eliminar) */
+.table .btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  border-radius: 0.2rem;
+  i {
+    margin-right: 0.25rem;
+  }
+}
+
+/* Columna de acciones en la tabla */
+.acciones-columna {
+  white-space: nowrap;
+}
+
+/* Botón de editar */
+.btn-warning {
+  background-color: #ffc107;
+  border-color: #ffc107;
+  color: #212529;
+
+  &:hover {
+    background-color: #e0a800;
+    border-color: #cc9500;
+  }
+}
+
+/* Botón de eliminar */
+.btn-danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
+
+  &:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+  }
+}
+
+/* Estilos de alertas */
+.alert {
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+  text-align: center;
+}
+
+/* Alerta informativa (Cargando) */
+.alert-info {
+  color: #0c5460;
+  background-color: #d1ecf1;
+  border-color: #bee5eb;
+}
+
+/* Alerta de error */
+.alert-danger {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
+
+/* Alerta de advertencia (Sin permisos) */
+.alert-warning {
+  color: #856404;
+  background-color: #fff3cd;
+  border-color: #ffeeba;
+}
+
+/* Responsive (Mobile Table Cards) */
+@media (max-width: 576px) {
+  .table-responsive {
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    overflow-x: auto; /* Mantener scroll horizontal si es necesario */
+    max-height: none;
+    overflow-y: visible;
+  }
+
+  .table {
+    display: block;
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    overflow: visible;
+    min-width: unset;
+
+    thead {
+      display: none;
+    }
+    tbody {
+      tr {
+        display: block;
+        margin-bottom: 1rem;
+        border: 1px solid #dee2e6;
+        border-radius: 0.25rem;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        background-color: #fff;
+        td {
+          display: block;
+          padding: 0.75rem;
+          border-top: 1px solid #eee;
+          position: relative;
+          padding-left: 50%;
+          text-align: right;
+          white-space: normal; /* Permitir que el texto se envuelva en móvil */
+
+          &:first-child {
+              border-top: none;
+          }
+
+          &::before {
+            position: absolute;
+            top: 0.75rem;
+            left: 0.75rem;
+            width: 45%;
+            padding-right: 0.5rem;
+            font-weight: bold;
+            content: attr(data-label);
+            text-align: left;
+            color: var(--dark-gray);
+          }
+
+          &:last-child {
+            text-align: right;
+            border-bottom: none;
+            justify-content: flex-end; /* Alinea los botones a la derecha */
+            display: flex; /* Asegura flexbox para los botones */
+            padding-right: 0.75rem;
+          }
+        }
+      }
+    }
+  }
+  .acciones-columna {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    button {
+      margin-left: 0.5rem;
+    }
+  }
+}
+
+/* Medium screens (tablets) */
+@media (min-width: 577px) and (max-width: 768px) {
+  .table-responsive {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  .table {
+    min-width: 1200px; /* Ajuste para tablets */
+  }
+}
+
+/* Large screens (desktops) */
+@media (min-width: 769px) and (max-width: 1200px) {
+  .table {
+    min-width: 1400px; /* Ajuste para desktops pequeños */
+  }
+}

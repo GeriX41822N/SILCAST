@@ -1,0 +1,72 @@
+<div class="gallery-hero">
+  <img src="/assets/images/galeria-hero.JPG" alt="Portada Galería" />
+  <div class="overlay-texto">
+    <h1>Nuestra Galería</h1>
+    <p>
+      Explora la calidad y el alcance de nuestros proyectos a través de imágenes de nuestra flota de grúas y servicios industriales.
+    </p>
+  </div>
+</div>
+
+<div class="gallery-content">
+  <section class="gallery-section gruas-carousel-section">
+    <div class="section-header">
+      <h2>{{ galleryData[0].title }}</h2>
+      <p>{{ galleryData[0].description }}</p>
+    </div>
+
+    <div class="carousel-container gruas-carousel-preview-container">
+      <button class="carousel-arrow prev-arrow" (click)="prevGruasImage()">
+        <span class="arrow-icon">&#10094;</span>
+      </button>
+
+      <div class="carousel-images-wrapper">
+        <div class="carousel-preview-image prev-image">
+          <img [src]="gruasImages[(currentGruasIndex - 1 + gruasImages.length) % gruasImages.length].url"
+               [alt]="gruasImages[(currentGruasIndex - 1 + gruasImages.length) % gruasImages.length].alt">
+        </div>
+        <div class="carousel-main-image gruas-main-image">
+          <img [src]="gruasImages[currentGruasIndex].url"
+               [alt]="gruasImages[currentGruasIndex].alt">
+        </div>
+        <div class="carousel-preview-image next-image">
+          <img [src]="gruasImages[(currentGruasIndex + 1) % gruasImages.length].url"
+               [alt]="gruasImages[(currentGruasIndex + 1) % gruasImages.length].alt">
+        </div>
+      </div>
+
+      <button class="carousel-arrow next-arrow" (click)="nextGruasImage()">
+        <span class="arrow-icon">&#10095;</span>
+      </button>
+    </div>
+  </section>
+
+  <section class="gallery-section servicios-carousel-section">
+    <div class="section-header">
+      <h2>{{ galleryData[1].title }}</h2>
+      <p>{{ galleryData[1].description }}</p>
+    </div>
+
+    <div class="carousel-container servicios-carousel-preview-container">
+      <button class="carousel-arrow prev-arrow" (click)="prevServiciosImage()">
+        <span class="arrow-icon">&#10094;</span>
+      </button>
+
+      <div class="carousel-images-wrapper">
+        <div class="carousel-preview-image prev-image">
+          <img [src]="currentServiciosPrevImage.url" [alt]="currentServiciosPrevImage.alt">
+        </div>
+        <div class="carousel-main-image servicios-main-image">
+          <img [src]="serviciosImages[currentServiciosIndex].url" [alt]="serviciosImages[currentServiciosIndex].alt">
+        </div>
+        <div class="carousel-preview-image next-image">
+          <img [src]="currentServiciosNextImage.url" [alt]="currentServiciosNextImage.alt">
+        </div>
+      </div>
+
+      <button class="carousel-arrow next-arrow" (click)="nextServiciosImage()">
+        <span class="arrow-icon">&#10095;</span>
+      </button>
+    </div>
+  </section>
+</div>

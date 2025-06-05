@@ -1,0 +1,196 @@
+@use 'sass:color';
+
+/*--------------------------------------------------------------
+# Estilos para el Carrusel Hero con transición tipo cubo
+--------------------------------------------------------------*/
+
+.hero-carousel {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.carousel {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.carousel-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transform: scale(0.95) rotateY(15deg);
+  transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.carousel-slide.active {
+  opacity: 1;
+  transform: scale(1) rotateY(0deg);
+  z-index: 1;
+  pointer-events: auto;
+}
+
+.carousel-background {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.carousel-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: var(--color-overlay-light);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+}
+
+.carousel-content {
+  color: white;
+  max-width: 800px;
+  margin: 0 auto;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+
+  h2 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+  }
+
+  p {
+    font-size: 1.4rem;
+    margin-bottom: 2rem;
+  }
+}
+
+.btn {
+  background-color: var(--color-primary);
+  color: white;
+  font-size: 1rem;
+  padding: 0.8rem 2rem;
+  border-radius: 30px;
+  font-weight: 600;
+  text-transform: uppercase;
+  transition: all 0.3s ease-in-out;
+  box-shadow: var(--box-shadow-default);
+
+  &:hover {
+    background-color: var(--color-primary-light); // ⚠️ Asegúrate que exista en :root
+    transform: scale(1.05);
+    box-shadow: var(--box-shadow-hover);
+  }
+}
+
+.carousel-control {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 2.5rem;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.4);
+  border: none;
+  border-radius: 50%;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  z-index: 10;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+
+  &.prev {
+    left: 1rem;
+  }
+
+  &.next {
+    right: 1rem;
+  }
+}
+
+.carousel-indicators {
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+  text-align: center;
+  z-index: 11;
+
+  span {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin: 0 6px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+
+    &.active {
+      background-color: var(--color-primary);
+    }
+  }
+}
+
+.about {
+  padding: 4rem 2rem;
+  text-align: center;
+  background-color: var(--color-white);
+  border-radius: 12px;
+  box-shadow: var(--box-shadow-default);
+  margin: 4rem auto;
+  max-width: 960px;
+
+  h2 {
+    color: var(--color-primary);
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+  }
+
+  p {
+    max-width: 800px;
+    margin: 0 auto 2rem;
+    font-size: 1.1rem;
+    line-height: 1.7;
+  }
+
+  .btn {
+    background-color: var(--color-secondary);
+
+    &:hover {
+      background-color: var(--color-secondary-light); // ⚠️ Asegúrate que exista en :root
+    }
+  }
+}
+
+/*--------------------------------------------------------------
+# Responsive
+--------------------------------------------------------------*/
+@media (max-width: 768px) {
+  .carousel-content h2 {
+    font-size: 2rem;
+  }
+
+  .carousel-content p {
+    font-size: 1.1rem;
+  }
+
+  .carousel-control {
+    font-size: 2rem;
+  }
+
+  .about {
+    padding: 3rem 1rem;
+  }
+}

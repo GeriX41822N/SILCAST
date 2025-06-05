@@ -1,0 +1,137 @@
+/* --------------------------------------------------------------
+   # Global Styles and Responsive Utilities for SILCAST
+   -------------------------------------------------------------- */
+
+/* 📌 CSS Variables for colors and fonts */
+@use 'sass:color';
+
+:root {
+  /* Fonts */
+  --font-default: "Open Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-primary: "Roboto", sans-serif;
+  --font-secondary: "Work Sans", sans-serif;
+
+  /* Base Colors */
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-default: #364d59;
+  --color-primary: #feb900;
+  --color-secondary: #52565e;
+  --color-dark: #333333;
+  --color-overlay-dark: rgba(0, 0, 0, 0.8);
+  --color-overlay-light: rgba(0, 0, 0, 0.5);
+
+  /* Derived (adjusted) Colors */
+  --color-primary-light: #{color.adjust(#feb900, $lightness: 10%)};
+  --color-secondary-light: #{color.adjust(#52565e, $lightness: 10%)};
+  --color-hover-link: #{color.adjust(#ff914d, $lightness: 10%)};
+
+  /* Effects */
+  --box-shadow-default: 0 4px 8px rgba(0, 0, 0, 0.15);
+  --box-shadow-hover: 0 6px 20px rgba(0, 0, 0, 0.25);
+
+  /* Behavior */
+  scroll-behavior: smooth;
+}
+
+/* --------------------------------------------------------------
+   # General Styles
+   -------------------------------------------------------------- */
+body {
+  font-family: var(--font-default);
+  color: var(--color-default);
+  background-color: #f8f9fa;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: var(--color-hover-link);
+  }
+}
+
+/* Estilo para ocultar scroll cuando nav móvil está activo */
+@media (max-width: 1279px) {
+  .mobile-nav-active {
+    overflow: hidden;
+  }
+}
+
+/* --------------------------------------------------------------
+   # Responsive Mixins (SASS style)
+   -------------------------------------------------------------- */
+@mixin responsive($breakpoint) {
+  @if $breakpoint == sm {
+    @media (max-width: 576px) {
+      @content;
+    }
+  } @else if $breakpoint == md {
+    @media (max-width: 768px) {
+      @content;
+    }
+  } @else if $breakpoint == lg {
+    @media (max-width: 992px) {
+      @content;
+    }
+  } @else if $breakpoint == xl {
+    @media (max-width: 1200px) {
+      @content;
+    }
+  }
+}
+
+/* --------------------------------------------------------------
+   # Utility Classes
+   -------------------------------------------------------------- */
+.overlay-dark {
+  background-color: var(--color-overlay-dark);
+}
+
+.overlay-light {
+  background-color: var(--color-overlay-light);
+}
+
+.text-primary {
+  color: var(--color-primary) !important;
+}
+
+.text-secondary {
+  color: var(--color-secondary) !important;
+}
+
+.bg-primary {
+  background-color: var(--color-primary) !important;
+}
+
+.bg-dark-overlay {
+  background-color: var(--color-overlay-dark) !important;
+}
+
+.font-primary {
+  font-family: var(--font-primary);
+}
+
+.font-secondary {
+  font-family: var(--font-secondary);
+}
+
+.shadow-default {
+  box-shadow: var(--box-shadow-default);
+}
+
+.shadow-hover:hover {
+  box-shadow: var(--box-shadow-hover);
+}
+
+/* --------------------------------------------------------------
+   # Transition helpers
+   -------------------------------------------------------------- */
+.transition-all {
+  transition: all 0.3s ease-in-out;
+}

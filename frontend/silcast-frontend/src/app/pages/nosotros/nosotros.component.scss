@@ -1,0 +1,247 @@
+/* 🌄 Imagen de portada Nosotros */
+.nosotros-hero {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .overlay-texto {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 3rem 10%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: white;
+    background: rgba(0, 0, 0, 0.6);
+    text-align: left;
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: var(--color-primary);
+    }
+
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      max-width: 800px;
+    }
+  }
+}
+
+/* 📊 Barra de estadísticas */
+.estadisticas {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #F18638;
+  color: white;
+  padding: 2rem 0;
+  text-align: center;
+
+  .stat {
+    h2 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      font-size: 1rem;
+      font-weight: bold;
+    }
+  }
+}
+
+/* 🧭 Valores y Misión/Vision */
+.valores-mision-container {
+  display: flex;
+  flex-wrap: wrap; /* Allows wrapping on smaller screens */
+  padding: 4rem 5%;
+  gap: 2rem;
+  justify-content: space-between;
+  background-color: #f8f8f8;
+  align-items: stretch; /* IMPORTANT: This makes flex items stretch to fill the height of the tallest item */
+
+  > div {
+    flex: 1 1 45%; /* Each item takes roughly 45% of the width, allowing for gap */
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: var(--box-shadow-default);
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    display: flex; /* Make the inner div a flex container */
+    flex-direction: column; /* Stack its content vertically */
+  }
+}
+
+/* 🎠 Carrusel de valores */
+.valores-carrusel {
+  text-align: center;
+  flex: 1; /* Allow this flex item to grow and shrink */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Pushes content to top/bottom if space allows */
+
+  h2 {
+    color: var(--color-primary);
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .valor {
+    flex: 1; /* Make the valor content expand to fill available space */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Align content to the start (top) */
+    align-items: center; /* Center content horizontally within the slide */
+
+    img {
+      width: 100%; /* Ensure image scales */
+      max-width: 180px;
+      height: 150px; /* Fixed height for images */
+      object-fit: cover; /* Crop image to fill the fixed height */
+      margin-bottom: 1rem;
+    }
+
+    h3 {
+      color: var(--color-secondary);
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      font-size: 1rem;
+      color: #555;
+      min-height: 50px; /* ! IMPORTANT: Set a minimum height for the paragraph to prevent jumps */
+      display: flex; /* Makes paragraph a flex container */
+      align-items: center; /* Vertically center content in paragraph if short */
+      justify-content: center; /* Horizontally center content in paragraph */
+      padding: 0 10px; /* Add some padding to text */
+    }
+  }
+}
+
+/* 🎯 Misión y visión */
+.misionvision-carrusel {
+  text-align: center;
+  flex: 1; /* Allow this flex item to grow and shrink */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Pushes content to top/bottom if space allows */
+
+
+  h2 {
+    color: var(--color-primary);
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .misionvision-slide { /* Added styling for this inner div */
+    flex: 1; /* Make the slide content expand to fill available space */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Align content to the start (top) */
+    align-items: center; /* Center content horizontally within the slide */
+  }
+
+  img {
+    width: 100%;
+    max-width: 250px;
+    height: 150px; /* Fixed height for images */
+    object-fit: cover; /* Crop image to fill the fixed height */
+    margin-bottom: 1rem;
+    border-radius: 10px;
+  }
+
+  p {
+    font-size: 1.1rem;
+    color: #444;
+    min-height: 80px; /* ! IMPORTANT: Set a minimum height for the paragraph to prevent jumps (adjust as needed) */
+    display: flex; /* Makes paragraph a flex container */
+    align-items: center; /* Vertically center content in paragraph if short */
+    justify-content: center; /* Horizontally center content in paragraph */
+    padding: 0 10px; /* Add some padding to text */
+  }
+}
+
+/* 🤝 Sección de Nuestros Clientes con Convenios */
+.clientes-convenio {
+  h2 {
+    text-align: center;
+    color: var(--color-primary);
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .clientes-grid {
+    display: grid;
+    // Increased minmax to make columns larger
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.5rem; /* Increased gap for better spacing */
+    padding: 2rem 5%;
+    background-color: #f8f8f8;
+    align-items: center;
+    justify-items: center;
+  }
+
+  img {
+    width: 250px;
+    max-width: 220px; /* ! IMPORTANT: Increased max-width for larger logos */
+    height: 150px; /* Maintain aspect ratio */
+    object-fit: contain;
+    padding: 0.5rem;
+  }
+}
+
+
+/* 📱 Responsive Styles */
+@media (max-width: 768px) {
+  .valores-mision-container {
+    flex-direction: column;
+    align-items: center;
+
+    > div {
+      flex: 1 1 100%;
+      min-height: unset;
+    }
+  }
+
+  .overlay-texto {
+    padding: 2rem;
+    text-align: center;
+    align-items: center;
+
+    h1 {
+      font-size: 2rem;
+    }
+
+    p {
+      font-size: 1rem;
+    }
+  }
+
+  .estadisticas {
+    flex-direction: column;
+    .stat {
+      margin-bottom: 1.5rem;
+    }
+  }
+
+  .clientes-convenio .clientes-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Adjust for smaller screens */
+  }
+
+  .clientes-convenio img {
+    max-width: 150px; /* Adjust for smaller screens */
+  }
+}

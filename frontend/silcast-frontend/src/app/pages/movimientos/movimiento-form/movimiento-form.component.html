@@ -1,0 +1,86 @@
+<div class="admin-hero">
+  <h1>{{ isEditing ? 'Editar Movimiento de Grúa' : 'Registrar Nuevo Movimiento de Grúa' }}</h1>
+  <p>Gestione los detalles de entrada y salida de las grúas.</p>
+</div>
+
+<div class="admin-page">
+  <header class="admin-header">
+    <div class="header-title">
+      <h1>Formulario de Movimiento</h1>
+    </div>
+  </header>
+
+  <main class="admin-content">
+    <h2>{{ isEditing ? 'Actualizar Registro Existente' : 'Crear Nuevo Registro' }}</h2>
+
+    <div class="card p-4"> <div *ngIf="isLoading" class="alert alert-info text-center" role="status">Cargando datos...</div>
+      <div *ngIf="errorMessage" class="alert alert-danger text-center" role="alert">{{ errorMessage }}</div>
+
+      <div *ngIf="!isLoading || errorMessage">
+        <form [formGroup]="movimientoForm" (ngSubmit)="onSubmit()">
+
+          <div class="mb-3" *ngIf="isEditing">
+            <label for="movimientoId" class="form-label">ID del Movimiento:</label>
+            <input type="text" class="form-control" id="movimientoId" [value]="movimientoId" disabled>
+          </div>
+
+          <div class="mb-3">
+            <label for="grua" class="form-label">Grúa:</label>
+            <select class="form-select" id="grua" formControlName="grua_id">
+              <option [value]="null" disabled>Seleccione una grúa</option>
+              <option *ngFor="let grua of gruas" [value]="grua.id">{{ grua.display_name }}</option>
+            </select>
+            <div *ngIf="hasError('grua_id', 'required')" class="text-danger">Debe seleccionar una Grúa.</div>
+          </div>
+
+          <div class="mb-3">
+            <label for="empleado" class="form-label">Empleado (Operador):</label>
+            <select class="form-select" id="empleado" formControlName="empleado_id">
+              <option [value]="null" disabled>Seleccione un empleado</option>
+              <option *ngFor="let empleado of empleados" [value]="empleado.id">{{ empleado.display_name }}</option>
+            </select>
+            <div *ngIf="hasError('empleado_id', 'required')" class="text-danger">Debe seleccionar un Empleado (Operador).</div>
+          </div>
+
+          <div class="mb-3">
+            <label for="fechaHoraEntrada" class="form-label">Fecha y Hora de Entrada:</label>
+            <input type="datetime-local" class="form-control" id="fechaHoraEntrada" formControlName="fecha_hora_entrada">
+            <div *ngIf="hasError('fecha_hora_entrada', 'required')" class="text-danger">La fecha y hora de entrada es requerida.</div>
+          </div>
+
+          <div class="mb-3">
+            <label for="fechaHoraSalida" class="form-label">Fecha y Hora de Salida:</label>
+            <input type="datetime-local" class="form-control" id="fechaHoraSalida" formControlName="fecha_hora_salida">
+            </div>
+
+          <div class="mb-3">
+            <label for="destino" class="form-label">Destino:</label>
+            <input type="text" class="form-control" id="destino" formControlName="destino">
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="kilometrajeEntrada" class="form-label">Kilometraje de Entrada:</label>
+              <input type="number" class="form-control" id="kilometrajeEntrada" formControlName="kilometraje_entrada">
+              <div *ngIf="hasError('kilometraje_entrada', 'required')" class="text-danger">El kilometraje de entrada es requerido.</div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="kilometrajeSalida" class="form-label">Kilometraje de Salida:</label>
+              <input type="number" class="form-control" id="kilometrajeSalida" formControlName="kilometraje_salida">
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-end mt-4"> <button type="button" class="btn btn-secondary me-3" (click)="onCancel()" [disabled]="isLoading">
+              <i class="fas fa-times-circle"></i> Cancelar
+            </button>
+            <button type="submit" class="btn btn-success" [disabled]="isLoading || movimientoForm.invalid">
+              <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              <i class="fas fa-save me-2" *ngIf="!isLoading"></i>
+              {{ isLoading ? 'Guardando...' : (isEditing ? 'Actualizar Movimiento' : 'Guardar Movimiento') }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+</div>

@@ -1,0 +1,109 @@
+@use 'sass:color'; // Asegúrate de tener esta importación si la usas en otros archivos
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap');
+
+$primary-color: #f6853c;
+$secondary-color: #ff4500;
+$dark-color: #333;
+$white: #fff;
+$spacer: 1rem;
+
+footer {
+    background: $dark-color;
+    color: $white;
+    padding: $spacer * 0.1 5; // Aumentado el padding vertical
+    text-align: center;
+    font-size: 0.8rem; // Reducido ligeramente el tamaño de la fuente general
+
+    .container {
+        max-width: 1300px; // Ancho máximo para el contenido
+        margin: 0 auto;
+        padding: $spacer * 2; // Reducido el padding horizontal del contenedor
+        display: flex;
+        flex-direction: column; // Cambiado a columna para apilar los elementos en pantallas pequeñas
+        align-items: center; // Centrar los elementos
+        gap: $spacer * 1.5; // Espacio entre los grupos de elementos
+    }
+
+    .footer-logo {
+        margin-bottom: $spacer; // Espacio debajo del logo
+        display: inline-block; // Para controlar el tamaño si es necesario
+
+        img {
+            height: 100px; // Ajusta la altura del logo según necesites
+            width: auto; // Mantiene la proporción del logo
+            display: block; // Evita espacio extra debajo de la imagen
+        }
+    }
+
+    .company-info {
+        text-align: center; // Centrar la información de la empresa
+        margin-bottom: $spacer; // Espacio debajo de la información de la empresa
+
+        p {
+            margin-bottom: $spacer * 0.25; // Pequeño espacio entre las líneas de la dirección
+        }
+    }
+
+    .copyright {
+        margin-bottom: $spacer; // Espacio debajo del copyright
+    }
+
+    .social-icons {
+        display: flex;
+        gap: $spacer * 1.5; // Más espacio entre los iconos
+
+        a {
+            display: inline-block; // Para poder aplicar estilos como el hover
+        }
+
+        img {
+            width: 36px; // Reducido el tamaño de los iconos
+            height: 36px;
+            object-fit: contain;
+            opacity: 0.8; // Ligeramente transparentes al inicio
+            transition: opacity 0.3s ease, transform 0.3s ease; // Transición suave para la opacidad y el tamaño
+
+            &:hover {
+                opacity: 1; // Opacidad completa al hacer hover
+                transform: scale(1.1); // Ligeramente más grandes al hacer hover
+            }
+        }
+    }
+}
+
+// Estilos para pantallas más grandes
+@media (min-width: 768px) {
+    footer {
+        font-size: 0.9rem;
+    }
+
+    footer .container {
+        padding: $spacer * 4;
+        flex-direction: row; // Volver a la disposición en fila
+        justify-content: space-between; // Espacio entre los elementos
+        align-items: center;
+        gap: $spacer * 2; // Añadido gap entre los elementos principales
+    }
+
+    footer .footer-logo {
+        margin-bottom: 0;
+    }
+
+    footer .company-info {
+        text-align: left; // Alinear a la izquierda en pantallas más grandes
+        margin-bottom: 0;
+    }
+
+    footer .copyright {
+        margin-bottom: 0;
+    }
+
+    footer .social-icons {
+        gap: $spacer * 2;
+    }
+
+    footer .social-icons img {
+        width: 42px;
+        height: 42px;
+    }
+}

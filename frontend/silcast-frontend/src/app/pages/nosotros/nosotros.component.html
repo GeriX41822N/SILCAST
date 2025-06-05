@@ -1,0 +1,68 @@
+<div class="nosotros-hero">
+  <img src="/assets/images/nosotros-hero.jpg" alt="Portada Nosotros" />
+  <div class="overlay-texto">
+    <h1>Nosotros</h1>
+    <p>
+      En SILCAST, nos especializamos en proveer servicios industriales y en la renta de grúas Titan.
+      Nuestro compromiso es ofrecer soluciones eficientes y seguras para satisfacer las necesidades de nuestros clientes en el sector industrial.
+    </p>
+    <p>
+      Contamos con un equipo de profesionales altamente capacitados y con amplia experiencia en el manejo de equipos de elevación y transporte de carga pesada.
+      Nos esforzamos por mantener los más altos estándares de calidad y seguridad en todos nuestros servicios.
+    </p>
+    <p>
+      Nuestra misión es ser un aliado estratégico para nuestros clientes, brindando servicios confiables y de alta calidad que contribuyan al éxito de sus proyectos.
+    </p>
+  </div>
+</div>
+
+<div class="estadisticas" id="estadisticas" #estadisticasSection>
+  <div class="stat">
+    <h2>{{ anioEstablecimiento }}</h2>
+    <p>Año de Establecimiento</p>
+  </div>
+  <div class="stat">
+    <h2>{{ proyectos }}</h2>
+    <p>Proyectos Completados</p>
+  </div>
+  <div class="stat">
+    <h2>{{ constructores }}</h2>
+    <p>Constructores Contratados</p>
+  </div>
+  <div class="stat">
+    <h2>{{ premios }}</h2>
+    <p>Premios Obtenidos</p>
+  </div>
+</div>
+
+<div class="valores-mision-container">
+  <div class="valores-carrusel">
+    <h2>Nuestros Valores</h2>
+    <div class="valores-slide">
+      <div class="valor">
+        <img [src]="valores[currentValorIndex].imagen" alt="{{ valores[currentValorIndex].titulo }}" />
+        <h3>{{ valores[currentValorIndex].titulo }}</h3>
+        <p>{{ valores[currentValorIndex].descripcion }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="misionvision-carrusel">
+    <div class="misionvision-slide">
+      <h2>{{ misionVisionSlides[currentMVIndex].titulo }}</h2>
+      <img [src]="misionVisionSlides[currentMVIndex].imagen" alt="{{ misionVisionSlides[currentMVIndex].titulo }}" />
+      <p>{{ misionVisionSlides[currentMVIndex].texto }}</p>
+    </div>
+  </div>
+</div>
+
+<div class="clientes-convenio">
+  <h2>Clientes con Convenios</h2>
+  <div class="clientes-grid">
+    <ng-container *ngFor="let cliente of clientes">
+      <a [href]="cliente.url ? cliente.url : '#'" [target]="cliente.url ? '_blank' : '_self'" rel="noopener noreferrer">
+        <img [src]="cliente.imagen" alt="{{ cliente.nombre }}" />
+      </a>
+    </ng-container>
+  </div>
+</div>

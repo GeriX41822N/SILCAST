@@ -1,0 +1,91 @@
+<div class="contact-container">
+  <section class="contact-hero">
+    <div class="hero-content">
+      <h2>Trabajemos juntos para consumar tu éxito</h2>
+      <p>Cuéntanos qué necesitas y nuestro equipo se pondrá en contacto contigo.</p>
+    </div>
+  </section>
+
+  <section class="contact-details">
+    <div class="contact-form">
+      <h3>Comunícate con nosotros</h3>
+      <form (ngSubmit)="enviarMensaje(contactForm)" #contactForm="ngForm">
+        <div class="form-group">
+          <label for="nombre">Nombre</label>
+          <input type="text" id="nombre" name="nombre" [(ngModel)]="nombre" required minlength="6" #nombreInput="ngModel">
+          <div *ngIf="nombreInput.invalid && (nombreInput.dirty || nombreInput.touched)" class="error-message">
+            <div *ngIf="nombreInput.errors?.['required']">
+              El nombre es obligatorio.
+            </div>
+            <div *ngIf="nombreInput.errors?.['minlength']">
+              El nombre debe tener al menos 6 caracteres.
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="email">Correo electrónico</label>
+          <input type="email" id="email" name="email" [(ngModel)]="email" required email #emailInput="ngModel">
+          <div *ngIf="emailInput.invalid && (emailInput.dirty || emailInput.touched)" class="error-message">
+            <div *ngIf="emailInput.errors?.['required']">
+              El correo electrónico es obligatorio.
+            </div>
+            <div *ngIf="emailInput.errors?.['email']">
+              Por favor, introduce un correo electrónico válido.
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="mensaje">Mensaje</label>
+          <textarea id="mensaje" name="mensaje" rows="5" [(ngModel)]="mensaje" required #mensajeInput="ngModel"></textarea>
+          <div *ngIf="mensajeInput.invalid && (mensajeInput.dirty || mensajeInput.touched)" class="error-message">
+            <div *ngIf="mensajeInput.errors?.['required']">
+              El mensaje es obligatorio.
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="btn" [disabled]="contactForm.invalid">Enviar Mensaje</button>
+      </form>
+    </div>
+
+    <div class="company-info">
+      <h3>Nuestra base de operaciones</h3>
+      <div class="info-item">
+        <h4>SILCAST</h4>
+        <p>José López Portillo #622, Colonia Puerta del Norte,<br>
+          General Escobedo, Nuevo León, México, CP. 66054</p>
+      </div>
+      <div class="info-item">
+        <h4>Teléfono</h4>
+        <p><a href="https://wa.me/528134823524" target="_blank">Departamento de Grúas (+52) 81 3482 3524</a></p>
+        <p><a href="https://wa.me/528119399462" target="_blank">Servicios industriales 1 (+52) 811 939 9462</a></p>
+        <p><a href="https://wa.me/528126645537" target="_blank">Servicios industriales 2 (+52) 812 664 5537</a></p>
+      </div>
+      <div class="info-item">
+        <h4>E-mail</h4>
+        <p><a href="mailto:melissa.castillo&#64;silcast.mx">melissa.castillo&#64;silcast.mx</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact-map">
+    <h3>Ubicación</h3>
+    <div class="map-container">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3592.8880002850033!2d-100.29071330791743!3d25.774262677418232!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x866293b576c1631f%3A0x6a4ed712b6ab5b0!2sSILCAST!5e0!3m2!1ses-419!2smx!4v1748469059049!5m2!1ses-419!2smx"
+        width="600"
+        height="450"
+        style="border:0; width: 100%; height: 400px; border-radius: 10px;"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
+  </section>
+
+  <div class="modal-overlay" *ngIf="mostrarModal">
+    <div class="modal-content">
+      <p>{{ mensajeModal }}</p>
+      <button class="btn-modal-cerrar" (click)="cerrarModal()">Cerrar</button>
+    </div>
+  </div>
+</div>

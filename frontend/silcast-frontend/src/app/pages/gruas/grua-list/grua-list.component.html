@@ -1,0 +1,81 @@
+<div class="admin-hero">
+  <h1>Gestión de Grúas</h1>
+  <p>Administra y visualiza el parque de grúas disponible.</p>
+</div>
+
+<div class="admin-page">
+  <header class="admin-header">
+    <div class="header-title">
+      <h1>Registro de Grúas</h1>
+    </div>
+  </header>
+
+  <main class="admin-content">
+    <h2>Detalle y Administración</h2>
+
+    <button class="btn btn-primary mb-3" (click)="showCreateForm()" *ngIf="canCreateGruas()">
+      <i class="fas fa-plus"></i> Registrar Nueva Grúa
+    </button>
+
+    <div *ngIf="isLoading" class="alert alert-info" role="status" aria-live="polite">Cargando grúas...</div>
+    <div *ngIf="error" class="alert alert-danger" role="alert">{{ error }}</div>
+    <div *ngIf="!isLoading && !error && !canViewGruas()" class="alert alert-warning" role="alert">No tienes permiso para ver la lista de grúas.</div>
+
+    <div *ngIf="!isLoading && !error && gruas.length > 0 && canViewGruas()">
+      <div class="card">
+        <div class="card-header">Lista de Grúas Registradas</div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-striped table-hover mb-0">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Unidad</th>
+                  <th>Tipo</th>
+                  <th>Combustible</th>
+                  <th>Capacidad (Ton.)</th>
+                  <th>Pluma Telescópica (Mts.)</th>
+                  <th>Documentación</th>
+                  <th>Operador</th>
+                  <th>Precio Hora</th>
+                  <th>Ayudante</th>
+                  <th>Cliente Actual</th>
+                  <th>Estado</th>
+                  <th *ngIf="canEditGruas() || canDeleteGruas()">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let grua of gruas">
+                  <td data-label="ID">{{ grua.id }}</td>
+                  <td data-label="Unidad">{{ grua.unidad }}</td>
+                  <td data-label="Tipo">{{ grua.tipo }}</td>
+                  <td data-label="Combustible">{{ grua.combustible }}</td>
+                  <td data-label="Capacidad (Ton.)">{{ grua.capacidad_toneladas }}</td>
+                  <td data-label="Pluma Telescópica (Mts.)">{{ grua.pluma_telescopica_metros ?? 'N/A' }}</td>
+                  <td data-label="Documentación">{{ grua.documentacion ?? 'N/A' }}</td>
+                  <td data-label="Operador">{{ grua.operador_id ?? 'N/A' }}</td>
+                  <td data-label="Precio Hora">{{ grua.precio_hora ?? 'N/A' }}</td>
+                  <td data-label="Ayudante">{{ grua.ayudante_id ?? 'N/A' }}</td>
+                  <td data-label="Cliente Actual">{{ grua.cliente_actual_id ?? 'N/A' }}</td>
+                  <td data-label="Estado">{{ grua.estado }}</td>
+                  <td data-label="Acciones" *ngIf="canEditGruas() || canDeleteGruas()" class="acciones-columna">
+                    <button class="btn btn-sm btn-warning me-2" (click)="editGrua(grua)" *ngIf="canEditGruas()">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-sm btn-danger" (click)="deleteGrua(grua.id!)" *ngIf="canDeleteGruas()">
+                      <i class="fas fa-trash-alt"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!isLoading && !error && gruas.length === 0 && canViewGruas()" class="alert alert-info" role="status" aria-live="polite">
+      No hay grúas registradas.
+    </div>
+  </main>
+</div>

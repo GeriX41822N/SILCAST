@@ -1,0 +1,177 @@
+/*--------------------------------------------------------------
+# Sección de Servicios - Carrusel Moderno
+--------------------------------------------------------------*/
+
+.services-carousel {
+  padding: 60px 20px;
+  text-align: center;
+  background-color: #fff;
+}
+
+.services-carousel h2 {
+  font-size: 2.5rem;
+  margin-bottom: 2.5rem;
+  color: var(--color-primary);
+}
+
+/* 🛞 Carrusel container */
+.carousel-container {
+  position: relative;
+  overflow-x: hidden;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* 🔁 Flechas */
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  font-size: 2rem;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  z-index: 10;
+  border-radius: 50%;
+  transition: background 0.3s;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.7);
+  }
+
+  &.left {
+    left: -10px;
+  }
+
+  &.right {
+    right: -10px;
+  }
+}
+
+/* 🚗 Carrusel track */
+.carousel-track {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  scroll-behavior: smooth;
+  overflow-x: auto;
+  padding: 1rem 0;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* 🧩 Tarjeta de servicio */
+.service-card {
+  flex: 0 0 220px;
+  background: #f4f4f4;
+  border-radius: 12px;
+  box-shadow: var(--box-shadow-default);
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  text-align: center;
+  padding-bottom: 1rem;
+  cursor: pointer;
+  opacity: 0.6;
+  transform: scale(0.95);
+  border: 2px solid transparent;
+
+  img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+  }
+
+  h3 {
+    font-size: 1rem;
+    margin: 0.8rem 0 0.4rem;
+    color: var(--color-default);
+  }
+
+  p {
+    font-size: 0.85rem;
+    color: var(--color-secondary);
+    padding: 0 10px;
+  }
+
+  &.active {
+    opacity: 1;
+    transform: scale(1.1);
+    border-color: var(--color-primary);
+    box-shadow: var(--box-shadow-hover);
+  }
+}
+
+/* 📝 Detalles del servicio activo */
+.servicio-detalle {
+  max-width: 800px;
+  margin: 2rem auto 0;
+  text-align: center;
+  animation: fadeIn 0.5s ease-in-out;
+
+  img {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+  }
+
+  h3 {
+    color: var(--color-primary);
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  ul {
+    list-style: disc;
+    text-align: left;
+    margin: 0 auto;
+    padding: 0 2rem;
+    max-width: 600px;
+    font-size: 1.05rem;
+    color: var(--color-secondary);
+
+    li {
+      margin-bottom: 0.6rem;
+    }
+  }
+}
+
+/* 🎬 Animación */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 📱 Responsivo */
+@media (max-width: 768px) {
+  .carousel-track {
+    gap: 10px;
+  }
+
+  .service-card {
+    flex: 0 0 180px;
+    font-size: 0.9rem;
+
+    img {
+      height: 120px;
+    }
+  }
+
+  .servicio-detalle h3 {
+    font-size: 1.6rem;
+  }
+}

@@ -1,0 +1,122 @@
+<div class="admin-hero">
+  <h1>Gestión de Usuarios</h1>
+  <p>Administra los usuarios del sistema, sus roles y permisos de acceso.</p>
+</div>
+
+<div class="admin-page">
+  <header class="admin-header">
+    <div class="header-title">
+      <h1>Listado de Usuarios</h1>
+    </div>
+  </header>
+
+  <main class="admin-content">
+    <h2>Detalle y Administración</h2>
+
+    <button class="btn btn-primary mb-3" (click)="showCreateForm()" *ngIf="canCreateUsers()">Agregar Nuevo Usuario</button>
+
+    <div class="card mb-4" *ngIf="showForm">
+      <div class="card-header">
+        {{ isEditing ? 'Editar Usuario' : 'Agregar Nuevo Usuario' }}
+      </div>
+      <div class="card-body">
+        <form (ngSubmit)="saveUser()">
+          <div class="mb-3" *ngIf="isEditing">
+            <label for="userId" class="form-label">ID:</label>
+            <input type="text" class="form-control" id="userId" [(ngModel)]="currentUser.id" name="id" disabled>
+          </div>
+
+          <div class="mb-3">
+            <label for="empleado_id" class="form-label">Empleado (Opcional):</label>
+            <select class="form-control" id="empleado_id" [(ngModel)]="currentUser.empleado_id" name="empleado_id">
+              <option [ngValue]="null">-- Seleccionar Empleado (Opcional) --</option>
+              <option *ngFor="let empleado of empleados" [value]="empleado.id">
+                {{ empleado.display_name }} (ID: {{ empleado.id }})
+              </option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="email" class="form-label">Email:</label>
+            <input type="email" class="form-control" id="email" [(ngModel)]="currentUser.email" name="email" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="password" class="form-label">Password:</label>
+            <input type="password" class="form-control" id="password" [(ngModel)]="currentUser.password" name="password" [required]="!isEditing">
+              <small class="form-text text-muted" *ngIf="isEditing">Deja este campo vacío si no quieres cambiar la contraseña.</small>
+          </div>
+
+          <div class="mb-3" *ngIf="canEditUsers()">
+              <label class="form-label">Roles:</label>
+              <div>
+                <div *ngFor="let role of roles" class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox"
+                        [id]="'role-' + role.id"
+                        [value]="role.id"
+                        [checked]="isRoleSelected(role.id)"
+                        (change)="onRoleChange(role.id, $event)">
+                  <label class="form-check-label" [for]="'role-' + role.id">{{ role.name }}</label>
+                </div>
+              </div>
+          </div>
+
+
+          <button type="submit" class="btn btn-success me-2" *ngIf="(!isEditing && canCreateUsers()) || (isEditing && canEditUsers())">
+              {{ isEditing ? 'Actualizar Usuario' : 'Guardar Usuario' }}
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Cancelar</button>
+        </form>
+      </div>
+    </div>
+
+
+    <div *ngIf="isLoading">Cargando usuarios...</div>
+    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+    <div *ngIf="!isLoading && !error && users.length > 0 && canViewUsers()">
+      <div class="card">
+        <div class="card-header">Listado de Usuarios</div>
+        <div class="card-body p-0"> <div class="table-responsive"> <table class="table table-striped mb-0"> <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Email</th>
+                  <th>Empleado</th>
+                  <th>Roles Asignados</th>
+                  <th *ngIf="canEditUsers() || canDeleteUsers()">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let user of users">
+                  <td>{{ user.id }}</td>
+                  <td>{{ user.email }}</td>
+                  <td>
+                    {{ user.empleado ? (user.empleado.nombre + ' ' + user.empleado.apellido_paterno) : 'N/A' }}
+                  </td>
+                  <td>
+                    <span *ngFor="let role of user.roles; last as isLast">
+                      {{ role.name }}{{ !isLast ? ', ' : '' }}
+                    </span>
+                    <span *ngIf="!user.roles || user.roles.length === 0">Sin roles</span>
+                  </td>
+                  <td *ngIf="canEditUsers() || canDeleteUsers()">
+                    <button class="btn btn-sm btn-warning me-2" (click)="editUser(user)" *ngIf="canEditUsers()">Editar</button>
+                    <button class="btn btn-sm btn-danger" (click)="deleteUser(user.id!)" *ngIf="canDeleteUsers()">Eliminar</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!isLoading && !error && users.length === 0 && canViewUsers()" class="no-users-message">
+      No hay usuarios registrados.
+    </div>
+
+    <div *ngIf="!isLoading && error && error.includes('No tienes permiso para ver la lista de usuarios.')">
+        <div class="alert alert-warning">No tienes permiso para ver la lista de usuarios.</div>
+    </div>
+  </main>
+</div>

@@ -1,0 +1,333 @@
+/* --------------------------------------------------------------
+   # Global Styles and Responsive Utilities for SILCAST
+   -------------------------------------------------------------- */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap');
+
+:root {
+  --primary-blue: #1e88e5;
+  --light-gray: #f7f9fc;
+  --dark-gray: #2d3748;
+  --accent-orange: #fb8c00;
+  --border-color: #e2e8f0;
+  --card-shadow: rgba(0, 0, 0, 0.1);
+  --hover-shadow: rgba(30, 136, 229, 0.2);
+}
+
+.admin-hero {
+  width: 100%;
+  height: 250px;
+  background-image: url('/assets/images/hero-general.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding-top: 80px;
+  position: relative;
+  z-index: 1;
+
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+    color: #ffffff !important; 
+  }
+
+  p {
+    font-size: 1.2rem;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    color: #ffffff !important; 
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: -1;
+  }
+}
+
+.admin-page {
+  font-family: 'Roboto', sans-serif;
+  color: var(--dark-gray);
+  background-color: var(--light-gray);
+  min-height: calc(100vh - 250px);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: -80px;
+  position: relative;
+  z-index: 2;
+  width: 100%;
+
+  @media (max-width: 768px) {
+    padding: 16px;
+  }
+
+  header.admin-header {
+    width: 100%;
+    max-width: 960px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding: 16px;
+    background-color: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 2px 6px var(--card-shadow);
+    border-bottom: none;
+
+    h1 {
+      font-size: 2rem;
+      color: #ffffff; 
+      margin: 0;
+      font-weight: 500;
+    }
+  }
+// Estilos para el contenido principal de la página de administración
+  main.admin-content { // Contenedor principal de la página de administración
+    width: 100%;
+    max-width: 1600px;
+    text-align: left;
+
+    h2 {
+      font-size: 1.6rem;
+      margin-bottom: 24px;
+      color: var(--dark-gray);
+      position: relative;
+      padding-bottom: 10px;
+      font-weight: 500;
+      text-align: center;
+
+      &::after { // Línea decorativa debajo del título
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 3px;
+        background-color: var(--accent-orange);
+        border-radius: 2px;
+      }
+    }
+  }
+}
+
+/* Estilos para el componente de Gestión de Empleados */
+
+:host {
+  display: block;
+  min-height: calc(100vh - var(--header-height, 0px) - var(--footer-height, 0px));
+}
+
+h2 {
+  color: #343a40;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 0.5rem;
+}
+
+h4 {
+  color: #495057;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px dashed #ced4da;
+  padding-bottom: 0.5rem;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+
+  &:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+  }
+}
+
+.card {
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  margin-bottom: 2rem;
+}
+
+.card-header {
+  background-color: #e9ecef;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+  font-weight: bold;
+  padding: 0.75rem 1.25rem;
+}
+
+.card-body {
+  padding: 1.25rem;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #495057;
+}
+
+.form-control {
+  border-radius: 0.25rem;
+  border: 1px solid #ced4da;
+  padding: 0.375rem 0.75rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+  &:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
+}
+
+.form-control:disabled {
+  background-color: #e9ecef;
+  opacity: 1;
+}
+
+.form-check-inline {
+  margin-right: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.form-check-input {
+  margin-top: 0.3rem;
+  cursor: pointer;
+}
+.form-check-input:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.form-check-label {
+  cursor: pointer;
+}
+
+.btn-success {
+  background-color: #28a745;
+  border-color: #28a745;
+  &:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+  }
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  &:hover {
+    background-color: #5a6268;
+    border-color: #545b62;
+  }
+}
+
+
+/* Estilos para el contenedor responsive de la tabla */
+.table-responsive {
+  display: block;
+  width: 100%;
+  overflow-x: auto; /* Permite el scroll horizontal */
+  -webkit-overflow-scrolling: touch; /* Mejora el scroll en iOS */
+  max-height: 400px; /* **ESTO CONTROLA EL SCROLL VERTICAL** */
+  overflow-y: auto; /* Muestra el scroll vertical cuando el contenido excede max-height */
+  margin-bottom: 1rem; /* Deja un pequeño margen debajo de la tabla */
+  border: 1px solid rgba(0, 0, 0, 0.125); /* Borde similar al de la tarjeta */
+  border-radius: 0.5rem; /* Bordes redondeados similares a la tarjeta */
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); /* Sombra similar a la tarjeta */
+}
+
+/* Estilos para la tabla */
+.table {
+  width: 100%; /* La tabla ocupará el 100% de su contenedor */
+  min-width: 1600px; /* <--- AQUÍ SE FUERZA EL ANCHO MÍNIMO DE LA TABLA */
+  margin-bottom: 0;
+  color: #212529;
+  border-collapse: collapse;
+  table-layout: auto; /* Mantener 'auto' para que el ancho de las columnas se ajuste naturalmente */
+}
+
+.table th,
+.table td {
+  padding: 0.75rem;
+  vertical-align: top;
+  border-top: 1px solid #dee2e6;
+  /* NO ESTABLECEMOS min-width INDIVIDUALMENTE PARA LAS CELDAS */
+  white-space: nowrap; /* <--- ESTO ES CRUCIAL: Evita que el texto se rompa y que los datos se superpongan */
+}
+
+@media (max-width: 768px) {
+  .table {
+    min-width: 100%; /* La tabla ocupará el 100% del ancho disponible en pantallas pequeñas */
+  }
+  .table th,
+  .table td {
+    white-space: normal; /* Permitir que el texto se rompa en varias líneas en móviles para evitar el desbordamiento excesivo */
+    min-width: unset; /* Quitar cualquier min-width si se hubiera aplicado */
+  }
+}
+
+/* Estilos para los botones de acción en la tabla */
+.table .btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  border-radius: 0.2rem;
+}
+
+.btn-warning {
+  background-color: #ffc107;
+  border-color: #ffc107;
+  color: #212529;
+  &:hover {
+    background-color: #e0a800;
+    border-color: #cc9500;
+  }
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  &:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+  }
+}
+
+/* Estilos para mensajes de carga y error */
+.alert {
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+}
+
+.alert-danger {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
+
+.alert-warning {
+  color: #856404;
+  background-color: #fff3cd;
+  border-color: #ffeeba;
+}
+
+/* Estilo para el mensaje "No hay empleados registrados" */
+.no-users-message {
+  margin-top: 1rem;
+  font-style: italic;
+  color: #6c757d;
+}

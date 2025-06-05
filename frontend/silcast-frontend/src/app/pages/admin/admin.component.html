@@ -1,0 +1,43 @@
+<div class="admin-hero">
+    <h1>Panel de Administración</h1>
+    <p>Gestion de Silcast de forma eficiente.</p>
+</div>
+
+<div class="admin-page">
+
+  <header class="admin-header">
+    <h1></h1> <button (click)="logout()" class="logout-button">
+        <span class="material-icons">logout</span>
+        Cerrar Sesion
+    </button>
+  </header>
+
+  <main class="admin-content">
+    <h2>Secciones Disponibles</h2>
+
+    <div class="sections-grid">
+      <ng-container *ngFor="let item of navItems">
+        <div class="nav-card" *ngIf="authService.hasPermission(item.permission)">
+          <span class="material-icons section-icon">{{ item.icon }}</span>
+
+          <h3>{{ item.label }}</h3>
+
+          <button [routerLink]="[item.path]">{{ item.label }}</button>
+        </div>
+      </ng-container>
+
+    </div>
+
+    <div *ngIf="navItems.length > 0 && !hasVisibleNavItems" class="no-permissions-message">
+      <p>No tienes permisos para acceder a ninguna seccion administrativa.</p>
+      <p>Si crees que esto es un error, contacta al administrador del sistema.</p>
+    </div>
+
+    <div *ngIf="navItems.length === 0" class="no-permissions-message">
+      <p>No hay secciones administrativas definidas.</p>
+      <p>Contacta al administrador del sistema para configurar el panel.</p>
+    </div>
+
+  </main>
+
+</div>

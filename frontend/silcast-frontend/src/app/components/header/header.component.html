@@ -1,0 +1,28 @@
+<header id="header" class="header">
+  <div class="container-fluid container-xl d-flex align-items-center">
+
+    <a href="/" class="logo d-flex align-items-center">
+      <img src="/assets/images/Logo_SF.png" alt="Logo SILCAST" class="logo-img">
+    </a>
+
+    <div class="nav-toggle-wrapper d-flex align-items-center">
+      <i class="mobile-nav-toggle mobile-nav-show bi bi-list" (click)="toggleMobileNav()"></i>
+    </div>
+
+    <nav id="navbar" class="navbar" [class.mobile-nav-active]="mobileNavShow">
+      <i class="mobile-nav-toggle mobile-nav-hide bi bi-x" (click)="toggleMobileNav()"></i>
+
+      <ul>
+        <li><a routerLink="/" routerLinkActive="active" (click)="closeMobileNav()"><i class="bi bi-house-door"></i> Inicio</a></li>
+        <li><a routerLink="/nosotros" routerLinkActive="active" (click)="closeMobileNav()"><i class="bi bi-people-fill"></i> Nosotros</a></li>
+        <li><a routerLink="/galeria" routerLinkActive="active" (click)="closeMobileNav()"><i class="fas fa-images"></i> Galería</a></li>
+        <li><a routerLink="/contacto" routerLinkActive="active" (click)="closeMobileNav()"><i class="bi bi-envelope-fill"></i> Contacto</a></li>
+
+        <li *ngIf="!isLoggedIn()"><a routerLink="/login" routerLinkActive="active" (click)="closeMobileNav()"><i class="fas fa-sign-in-alt"></i> Iniciar sesión</a></li>
+        <li *ngIf="isLoggedIn()"><a href="#" (click)="onLogout(); $event.preventDefault();"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
+        <li *ngIf="isLoggedIn()"><a routerLink="/admin" routerLinkActive="active" (click)="closeMobileNav()"><i class="bi bi-shield-lock-fill"></i> Administración</a></li>
+      </ul>
+    </nav>
+
+  </div>
+</header>
